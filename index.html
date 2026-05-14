@@ -193,7 +193,7 @@
 <body>
     <div id="game-container" class="w-full relative overflow-hidden">
         <div class="absolute top-4 left-4 z-50 text-[10px] font-mono text-slate-500 tracking-widest pointer-events-none">
-            VER 4.9.5
+            VER 4.9.7
         </div>
 
         <!-- タイトル画面 -->
@@ -346,11 +346,13 @@
 
     <script>
 
-    // 5.0用URL設定
+    // === GAS URL (5.0用) ===
     const API_URL = "https://script.google.com/macros/s/AKfycbwpwalZph2UDQA8L6ojCNygSyUmbzziO9SutgfUGLJKl6Ak_Kxda5FFnC1VyeBQT8De8g/exec";
+    
     let currentVersion = 'new';
     let pendingMode = '';
 
+    // 「遊び方」から呼ばれる新旧選択
     function showVersionSelection(modeType) {
         pendingMode = modeType;
         const vs = document.getElementById('version-screen');
@@ -365,6 +367,7 @@
             <button type="button" onclick="finalizeVersion('new')" class="version-btn"><img src="${imgs[1]}" alt="新"></button>
         `;
         
+        // 遊び方画面を隠して、新旧選択を出す
         document.getElementById('overlay').classList.add('hidden');
         vs.classList.remove('hidden');
     }
@@ -372,7 +375,7 @@
     function finalizeVersion(v) {
         currentVersion = v;
         document.getElementById('version-screen').classList.add('hidden');
-        // ここで初めて名前入力画面を出す
+        // ここで初めて名前入力(あなたの名を刻んでください)を出す
         document.getElementById('name-screen').classList.remove('hidden');
     }
 
