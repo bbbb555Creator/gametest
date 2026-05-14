@@ -194,7 +194,7 @@
 <body>
     <div id="game-container" class="w-full relative overflow-hidden">
         <div class="absolute top-4 left-4 z-50 text-[10px] font-mono text-slate-500 tracking-widest pointer-events-none">
-            VER 4.0　New　question　b
+            VER 4.0　New　question c
         </div>
 
         <!-- タイトル画面 -->
@@ -347,18 +347,16 @@
 
     <script>
 
-    // === 5.0設定 (文吾指定のURL) ===
     const API_URL = "https://script.google.com/macros/s/AKfycbwpwalZph2UDQA8L6ojCNygSyUmbzziO9SutgfUGLJKl6Ak_Kxda5FFnC1VyeBQT8De8g/exec";
     let currentVersion = 'new';
     let pendingMode = '';
 
-    // モード選択ボタンから直接呼ばれる関数
-    function showVersionSelection(modeType) {
+    // 【ステップ1】トップのボタンから呼ばれる
+    function startFlow(modeType) {
         pendingMode = modeType;
         const vs = document.getElementById('version-screen');
         const btns = document.getElementById('version-buttons');
         const title = document.getElementById('version-title');
-        const menu = document.getElementById('menu-screen');
         
         title.textContent = modeType === 'stage' ? 'ステージモードを選択' : 'エンドレスを選択';
         const imgs = modeType === 'stage' ? ['st1.png', 'st2.png'] : ['ed1.png', 'ed2.png'];
@@ -368,15 +366,16 @@
             <button type="button" onclick="finalizeVersion('new')" class="version-btn"><img src="${imgs[1]}" alt="新"></button>
         `;
         
-        menu.classList.add('hidden');
+        document.getElementById('menu-screen').classList.add('hidden');
         vs.classList.remove('hidden');
     }
 
+    // 【ステップ2】新旧選択後、本来の startGame を呼ぶ
     function finalizeVersion(v) {
         currentVersion = v;
         document.getElementById('version-screen').classList.add('hidden');
-        // ここで元の「ゲーム開始(遊び方表示含む)」を呼ぶ
-        startGame(pendingMode);
+        // 本来のstartGameを呼ぶ。これで「遊び方」が出るはず
+        originalStartGame(pendingMode);
     }
 
     function backToMenuFromVersion() {
