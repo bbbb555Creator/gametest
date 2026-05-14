@@ -186,6 +186,7 @@
     
         .version-btn { background: none; border: none; padding: 0; cursor: pointer; width: 100%; max-width: 280px; margin: 0 auto; }
         .version-btn img { width: 100%; height: auto; display: block; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        /* 物理的な重なりを防ぐために hidden時は display: none */
         #version-screen.hidden { display: none !important; }
 
     </style>
@@ -193,7 +194,7 @@
 <body>
     <div id="game-container" class="w-full relative overflow-hidden">
         <div class="absolute top-4 left-4 z-50 text-[10px] font-mono text-slate-500 tracking-widest pointer-events-none">
-            VER 4.7
+            VER 4.8
         </div>
 
         <!-- タイトル画面 -->
@@ -352,9 +353,7 @@
     let currentVersion = 'new';
     let pendingMode = '';
 
-    // フロー変更: トップ -> 遊び方 -> 新旧選択
-    // 元の startGame(m) の中で overlay が表示されるロジックを利用する
-    
+    // 新旧選択画面を出す関数
     function showVersionSelection(modeType) {
         pendingMode = modeType;
         const vs = document.getElementById('version-screen');
@@ -366,24 +365,20 @@
         
         btns.innerHTML = `
             <button type="button" onclick="finalizeVersion('old')" class="version-btn btn-press"><img src="${imgs[0]}" alt="旧"></button>
-            <button type="button" onclick="finalizeSelection('new')" class="version-btn btn-press"><img src="${imgs[1]}" alt="新"></button>
+            <button type="button" onclick="finalizeVersion('new')" class="version-btn btn-press"><img src="${imgs[1]}" alt="新"></button>
         `;
         
-        // 遊び方画面を隠して、新旧選択を出す
+        // 遊び方画面(overlay)を隠して、新旧選択を出す
         document.getElementById('overlay').classList.add('hidden');
         vs.classList.remove('hidden');
     }
 
-    // 引数名を finalizeVersion に統一
     function finalizeVersion(v) {
         currentVersion = v;
         document.getElementById('version-screen').classList.add('hidden');
-        // ここで初めて名前入力(name-screen)を出す
+        // ここで初めて名前入力画面を出す
         document.getElementById('name-screen').classList.remove('hidden');
     }
-    
-    // 重複防止のためもう一つの関数名も定義
-    function finalizeSelection(v) { finalizeVersion(v); }
 
     function backToMenuFromVersion() {
         document.getElementById('version-screen').classList.add('hidden');
