@@ -184,7 +184,6 @@
         }
 
     
-        /* 新旧選択画面用 */
         .version-btn { background: none; border: none; padding: 0; cursor: pointer; width: 100%; max-width: 280px; margin: 0 auto; transition: transform 0.1s; }
         .version-btn:active { transform: scale(0.95); }
         .version-btn img { width: 100%; height: auto; display: block; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
@@ -195,7 +194,7 @@
 <body>
     <div id="game-container" class="w-full relative overflow-hidden">
         <div class="absolute top-4 left-4 z-50 text-[10px] font-mono text-slate-500 tracking-widest pointer-events-none">
-            VER 4.0　New　question　a
+            VER 4.0　New　question　b
         </div>
 
         <!-- タイトル画面 -->
@@ -353,11 +352,13 @@
     let currentVersion = 'new';
     let pendingMode = '';
 
+    // モード選択ボタンから直接呼ばれる関数
     function showVersionSelection(modeType) {
         pendingMode = modeType;
         const vs = document.getElementById('version-screen');
         const btns = document.getElementById('version-buttons');
         const title = document.getElementById('version-title');
+        const menu = document.getElementById('menu-screen');
         
         title.textContent = modeType === 'stage' ? 'ステージモードを選択' : 'エンドレスを選択';
         const imgs = modeType === 'stage' ? ['st1.png', 'st2.png'] : ['ed1.png', 'ed2.png'];
@@ -367,16 +368,15 @@
             <button type="button" onclick="finalizeVersion('new')" class="version-btn"><img src="${imgs[1]}" alt="新"></button>
         `;
         
-        // 遊び方(overlay)を隠して、新旧選択を出す
-        document.getElementById('overlay').classList.add('hidden');
+        menu.classList.add('hidden');
         vs.classList.remove('hidden');
     }
 
     function finalizeVersion(v) {
         currentVersion = v;
         document.getElementById('version-screen').classList.add('hidden');
-        // ここで初めて「あなたの名を刻んでください」画面を出す
-        document.getElementById('name-screen').classList.remove('hidden');
+        // ここで元の「ゲーム開始(遊び方表示含む)」を呼ぶ
+        startGame(pendingMode);
     }
 
     function backToMenuFromVersion() {
