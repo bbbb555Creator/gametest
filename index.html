@@ -358,9 +358,48 @@
     <audio id="sfx-wrong" preload="auto"><source src="batu.mp3" type="audio/mpeg"></audio>
 
     <script>
+
+        let currentMode = '';
+        let currentVersion = 'new';
+
+        function showVersionSelection(mode) {
+            currentMode = mode;
+            const screen = document.getElementById('version-screen');
+            const btnContainer = document.getElementById('version-buttons');
+            const title = document.getElementById('version-title');
+            
+            title.textContent = mode === 'stage' ? 'ステージモードを選択' : 'エンドレスを選択';
+            
+            if (mode === 'stage') {
+                btnContainer.innerHTML = `
+                    <button onclick="selectVersion('old')" class="version-btn btn-press"><img src="st1.png" alt="旧"></button>
+                    <button onclick="selectVersion('new')" class="version-btn btn-press"><img src="st2.png" alt="新"></button>
+                `;
+            } else {
+                btnContainer.innerHTML = `
+                    <button onclick="selectVersion('old')" class="version-btn btn-press"><img src="ed1.png" alt="旧"></button>
+                    <button onclick="selectVersion('new')" class="version-btn btn-press"><img src="ed2.png" alt="新"></button>
+                `;
+            }
+            
+            document.getElementById('menu-screen').classList.add('hidden');
+            screen.classList.remove('hidden');
+        }
+
+        function backToMenu() {
+            document.getElementById('version-screen').classList.add('hidden');
+            document.getElementById('menu-screen').classList.remove('hidden');
+        }
+
+        function selectVersion(version) {
+            currentVersion = version;
+            document.getElementById('version-screen').classList.add('hidden');
+            startGame(currentMode); // 元のゲーム開始処理を呼び出す
+        }
+
         // --- GAS連携設定 ---
         // ここにあなたのGASウェブアプリURLを貼り付けてください
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbwnCp93PKCD0GTshttlAglGpeMkensygNxUn4v3-YWS8b1AWFDAPJ9s38WmAb36cqkUkg/exec";
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbwpwalZph2UDQA8L6ojCNygSyUmbzziO9SutgfUGLJKl6Ak_Kxda5FFnC1VyeBQT8De8g/exec";
 
         const DATA = {
             // ステージ1：初級
