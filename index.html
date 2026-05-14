@@ -184,413 +184,6 @@
         }
 
     
-        
-        .version-btn img {
-            width: 100%;
-            height: auto;
-            display: block;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        }
-
-    
-        .version-btn {
-            background: none;
-            border: none;
-            padding: 0;
-            cursor: pointer;
-            width: 100%;
-            max-width: 280px;
-            margin: 0 auto;
-        }
-        .version-btn img {
-            width: 100%;
-            height: auto;
-            display: block;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        }
-        #version-screen.hidden { display: none !important; }
-
-    </style>
-</head>
-<body>
-    <div id="game-container" class="w-full relative overflow-hidden">
-        <div class="absolute top-4 left-4 z-50 text-[10px] font-mono text-slate-500 tracking-widest pointer-events-none">
-            VER 4.2
-        </div>
-
-        <!-- タイトル画面 -->
-        <div id="title-screen" class="flex-grow flex flex-col items-center justify-between text-center py-10 px-8 fade-in relative z-10">
-            <div class="w-full flex justify-end">
-                <button onclick="toggleMute()" class="p-3 bg-slate-800/90 rounded-full text-slate-400 border border-slate-700">
-                    <svg id="title-volume-on" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor"><path d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.686-3.686a1 1 0 011.111-.238zm5.459 2.158a1 1 0 011.414 0 7.5 7.5 0 010 10.608 1 1 0 01-1.414-1.414 5.5 5.5 0 000-7.78 1 1 0 010-1.414zm-2.828 2.828a1 1 0 011.414 0 3.5 3.5 0 010 4.95" /></svg>
-                    <svg id="title-volume-off" class="h-6 w-6 hidden" viewBox="0 0 20 20" fill="currentColor"><path d="M9.383 3.076A1 1 0 0110 4v12" /></svg>
-                </button>
-            </div>
-            
-            <div class="flex-grow flex items-center justify-center w-full">
-                <img src="logo.png" alt="対義語サバイバル" class="max-w-[280px] logo-float drop-shadow-[0_0_20px_rgba(52,211,153,0.3)]">
-            </div>
-            
-            <div class="w-full max-w-xs space-y-4 mb-6">
-                <button onclick="selectMode('stage')" class="w-full active:scale-95 transition-all">
-                    <img src="stm.png" alt="ステージモード" class="w-full drop-shadow-lg pointer-events-none">
-                </button>
-                <button onclick="selectMode('endless')" class="w-full active:scale-95 transition-all">
-                    <img src="endless.png" alt="エンドレスモード" class="w-full drop-shadow-lg pointer-events-none">
-                </button>
-                <button onclick="showInstallGuide()" class="w-full py-4 bg-slate-800/80 border-2 border-slate-600 rounded-2xl text-slate-300 font-bold text-sm active:scale-95 transition-all shadow-lg">
-                    アプリとしてダウンロード
-                </button>
-            </div>
-        </div>
-
-        <!-- 遊び方（ステージモード用） -->
-        <div id="instruction-screen-stage" class="hidden flex-grow flex flex-col items-center justify-center p-6 fade-in">
-            <h2 class="text-4xl font-black text-emerald-400 mb-8">遊び方</h2>
-            <div class="bg-slate-900/80 rounded-3xl p-8 border-2 border-emerald-500/30 text-slate-200 space-y-6 mb-10 w-full max-w-sm shadow-2xl backdrop-blur-md">
-                <div class="flex items-start gap-4">
-                    <span class="bg-emerald-500 text-slate-900 w-6 h-6 rounded-full flex items-center justify-center font-bold flex-shrink-0 mt-0.5">1</span>
-                    <p class="leading-relaxed">表示された単語の<span class="text-emerald-400 font-bold">対義語</span>を4択から選んでください。</p>
-                </div>
-                <div class="flex items-start gap-4">
-                    <span class="bg-emerald-500 text-slate-900 w-6 h-6 rounded-full flex items-center justify-center font-bold flex-shrink-0 mt-0.5">2</span>
-                    <p class="leading-relaxed">全60問。難易度は徐々に上昇。<br><span class="text-rose-400 font-bold">1問のミス</span>で即終了です。</p>
-                </div>
-                <div class="flex items-start gap-4">
-                    <span class="bg-emerald-500 text-slate-900 w-6 h-6 rounded-full flex items-center justify-center font-bold flex-shrink-0 mt-0.5">3</span>
-                    <p class="leading-relaxed">速度に応じて<span class="text-yellow-400 font-bold">ボーナス</span>加算！</p>
-                </div>
-            </div>
-            <button onclick="showNicknameInput()" class="w-full max-w-xs py-5 bg-emerald-600 rounded-2xl text-white font-black text-xl shadow-lg active:scale-95">次へ進む</button>
-        </div>
-
-        <!-- 遊び方（エンドレスモード用） -->
-        <div id="instruction-screen-endless" class="hidden flex-grow flex flex-col items-center justify-center p-6 fade-in">
-            <h2 class="text-4xl font-black text-blue-400 mb-8">エンドレス</h2>
-            <div class="bg-slate-900/80 rounded-3xl p-8 border-2 border-blue-500/30 text-slate-200 space-y-6 mb-10 w-full max-w-sm shadow-2xl backdrop-blur-md">
-                <div class="flex items-start gap-4">
-                    <span class="bg-blue-500 text-slate-900 w-6 h-6 rounded-full flex items-center justify-center font-bold flex-shrink-0 mt-0.5">1</span>
-                    <p class="leading-relaxed">表示された単語の<span class="text-blue-400 font-bold">対義語</span>を4択から選んでください。</p>
-                </div>
-                <div class="flex items-start gap-4">
-                    <span class="bg-blue-500 text-slate-900 w-6 h-6 rounded-full flex items-center justify-center font-bold flex-shrink-0 mt-0.5">2</span>
-                    <p class="leading-relaxed">問題は全200問。ステージ1～4の問題をランダムで出題。<br>集中力が試される究極の修行です。</p>
-                </div>
-                <div class="flex items-start gap-4">
-                    <span class="bg-blue-500 text-slate-900 w-6 h-6 rounded-full flex items-center justify-center font-bold flex-shrink-0 mt-0.5">3</span>
-                    <p class="leading-relaxed">回答する速度に応じて<span class="text-yellow-400 font-bold">ボーナス</span>が加算されます。</p>
-                </div>
-            </div>
-            <button onclick="showNicknameInput()" class="w-full max-w-xs py-5 bg-blue-600 rounded-2xl text-white font-black text-xl shadow-lg active:scale-95">次へ進む</button>
-        </div>
-
-        <!-- ニックネーム入力 -->
-        <div id="nickname-screen" class="hidden flex-grow flex flex-col items-center justify-center p-8 fade-in">
-            <h2 class="text-3xl font-black text-white mb-8 text-center leading-relaxed">あなたの名を<br>刻んでください</h2>
-            <input type="text" id="player-name" maxlength="10" placeholder="ニックネームを入力" 
-                class="w-full max-w-xs py-5 px-6 bg-slate-800 border-2 border-emerald-500 rounded-2xl text-white text-center text-2xl mb-8 focus:outline-none focus:ring-4 focus:ring-emerald-500/20 shadow-2xl">
-            <button onclick="initialStart()" class="w-full max-w-xs py-5 bg-gradient-to-r from-emerald-500 to-blue-600 rounded-2xl text-white font-black text-2xl shadow-xl active:scale-95 transition-all">
-                挑戦を開始する
-            </button>
-        </div>
-
-        <!-- ゲーム画面 -->
-        <div id="game-screen" class="hidden flex-grow flex flex-col p-6 fade-in relative">
-            <div id="feedback-layer"></div>
-            <div class="flex justify-between items-end mb-4 pt-10">
-                <div id="level-badge" class="px-4 py-1.5 text-white text-xs rounded-full font-bold shadow-lg"></div>
-                <div class="flex items-center gap-4">
-                    <button onclick="toggleMute()" class="p-2 bg-slate-800/90 rounded-full text-slate-400 border border-slate-700 shadow-lg active:scale-95 transition-all">
-                        <svg id="game-volume-on" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.686-3.686a1 1 0 011.111-.238zm5.459 2.158a1 1 0 011.414 0 7.5 7.5 0 010 10.608 1 1 0 01-1.414-1.414 5.5 5.5 0 000-7.78 1 1 0 010-1.414zm-2.828 2.828a1 1 0 011.414 0 3.5 3.5 0 010 4.95" /></svg>
-                        <svg id="game-volume-off" class="h-5 w-5 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5zM23 9l-6 6M17 9l6 6"/></svg>
-                    </button>
-                    <div class="text-right">
-                        <div class="text-[10px] text-slate-400 uppercase font-bold">Total Score</div>
-                        <div id="total-score" class="text-2xl font-black text-yellow-400 leading-none">0</div>
-                    </div>
-                </div>
-            </div>
-            <div class="relative w-full bg-slate-800/60 h-3 rounded-full overflow-hidden border border-slate-700">
-                <div id="progress-bar" class="bg-gradient-to-r from-blue-500 to-emerald-500 h-full transition-all duration-300" style="width: 0%"></div>
-            </div>
-            <div class="text-center my-6 flex-grow flex flex-col justify-center">
-                <div class="text-slate-400 text-sm font-bold tracking-widest uppercase">Question <span id="q-num" class="text-white text-xl">1</span> / <span id="total-q-num">60</span></div>
-                <div id="word-box" class="w-full py-12 px-4 mx-auto mt-6 flex flex-col items-center justify-center relative">
-                    <div id="question-word" class="text-5xl md:text-6xl font-black text-white drop-shadow-lg">---</div>
-                </div>
-            </div>
-            <div id="choices-grid" class="grid grid-cols-1 gap-4 mt-auto mb-8"></div>
-        </div>
-
-        <!-- リザルト・オーバーレイ -->
-        <div id="overlay" class="hidden absolute inset-0 z-50 flex items-start justify-center bg-slate-950/98 p-6 backdrop-blur-xl text-center overflow-y-auto">
-            <div id="result-content" class="w-full max-w-sm fade-in flex flex-col items-center py-10">
-                <div id="overlay-icon" class="text-7xl mb-4"></div>
-                <div id="overlay-message" class="text-2xl font-bold mb-4 text-slate-200 leading-tight"></div>
-                
-                <div id="review-box" class="hidden w-full p-6 mb-6 bg-rose-950/30 border border-rose-500/50 rounded-3xl text-left">
-                    <div class="text-rose-400 text-[10px] font-bold uppercase mb-1">正解の確認</div>
-                    <div class="flex items-center justify-between">
-                        <div id="rev-q" class="text-2xl font-black text-white">---</div>
-                        <div class="text-rose-400 mx-2">⇔</div>
-                        <div id="rev-a" class="text-2xl font-black text-emerald-400 underline">---</div>
-                    </div>
-                </div>
-
-                <div id="score-report" class="w-full mb-8 p-6 bg-slate-900/50 rounded-3xl border border-slate-800">
-                </div>
-
-                <div id="ranking-container" class="w-full mb-8">
-                    <h3 id="ranking-title" class="text-sm font-black text-slate-400 mb-4 tracking-[0.3em] uppercase flex items-center justify-center">
-                        <span class="h-px w-8 bg-slate-800 mr-2"></span>
-                        National Top 10
-                        <span class="h-px w-8 bg-slate-800 ml-2"></span>
-                    </h3>
-                    <div id="ranking-list" class="bg-slate-900/30 rounded-2xl border border-slate-800/50 overflow-hidden text-left min-h-[100px]">
-                    </div>
-                </div>
-
-                <button id="action-btn" class="w-full py-6 bg-emerald-600 rounded-3xl font-black text-2xl shadow-xl active:scale-95 transition-all text-white">アクションボタン</button>
-                <button onclick="location.reload()" class="mt-4 w-full py-3 text-slate-500 font-bold text-sm">タイトルへ戻る</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- オーディオ要素 -->
-    <audio id="bgm-stage1" loop preload="auto"><source src="1.mp3" type="audio/mpeg"></audio>
-    <audio id="bgm-stage2" loop preload="auto"><source src="2.mp3" type="audio/mpeg"></audio>
-    <audio id="bgm-stage3" loop preload="auto"><source src="3.mp3" type="audio/mpeg"></audio>
-    <audio id="bgm-stage4" loop preload="auto"><source src="4.mp3" type="audio/mpeg"></audio>
-    <audio id="bgm-endless" loop preload="auto"><source src="3.mp3" type="audio/mpeg"></audio>
-    <audio id="bgm-ending" loop preload="auto"><source src="end.mp3" type="audio/mpeg"></audio>
-    <audio id="sfx-correct" preload="auto"><source src="maru.mp3" type="audio/mpeg"></audio>
-    <audio id="sfx-wrong" preload="auto"><source src="batu.mp3" type="audio/mpeg"></audio>
-
-    <script>
-
-        
-        let currentMode = '';
-        let currentVersion = 'new'; // デフォルトは新
-
-        function showVersionSelection(mode) {
-            currentMode = mode;
-            const menu = document.getElementById('menu-screen');
-            const versionScreen = document.getElementById('version-screen');
-            const btnContainer = document.getElementById('version-buttons');
-            const title = document.getElementById('version-title');
-            
-            title.textContent = mode === 'stage' ? 'ステージモードを選択' : 'エンドレスを選択';
-            
-            if (mode === 'stage') {
-                btnContainer.innerHTML = `
-                    <button type="button" onclick="selectVersion('old')" class="version-btn btn-press"><img src="st1.png" alt="旧"></button>
-                    <button type="button" onclick="selectVersion('new')" class="version-btn btn-press"><img src="st2.png" alt="新"></button>
-                `;
-            } else {
-                btnContainer.innerHTML = `
-                    <button type="button" onclick="selectVersion('old')" class="version-btn btn-press"><img src="ed1.png" alt="旧"></button>
-                    <button type="button" onclick="selectVersion('new')" class="version-btn btn-press"><img src="ed2.png" alt="新"></button>
-                `;
-            }
-            
-            menu.classList.add('hidden');
-            versionScreen.classList.remove('hidden');
-        }
-
-        function backToMenu() {
-            document.getElementById('version-screen').classList.add('hidden');
-            document.getElementById('menu-screen').classList.remove('hidden');
-        }
-
-        function selectVersion(version) {
-            currentV<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#0f172a">
-    
-    <title>対義語サバイバル - 全国ランキング版</title>
-    
-    <link rel="apple-touch-icon" href="icon.png">
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;500;900&family=Noto+Serif+JP:wght@900&family=Sawarabi+Mincho&display=swap');
-        body { 
-            font-family: 'Kiwi Maru', serif; 
-            background-color: #0f172a;
-            background-image: linear-gradient(rgba(15, 23, 42, 0.75), rgba(15, 23, 42, 0.75)), url('bg.png');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            color: #f8fafc; 
-            touch-action: manipulation; 
-            user-select: none; 
-            -webkit-tap-highlight-color: transparent;
-            margin: 0;
-            padding: 0;
-        }
-
-        #game-container {
-            min-height: 100vh;
-            min-height: -webkit-fill-available;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .fade-in { animation: fadeIn 0.4s ease-out forwards; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .logo-float { animation: float 4s ease-in-out infinite; }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-
-        #word-box {
-            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%);
-            border: 4px solid #34d399;
-            box-shadow: 0 0 30px rgba(52, 211, 153, 0.3);
-            border-radius: 2rem;
-        }
-
-        .choice-btn {
-            background: rgba(30, 41, 59, 0.7);
-            border: 2px solid rgba(52, 211, 153, 0.2);
-            color: #ffffff;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-            transition: all 0.1s;
-            font-size: 1.5rem;
-            font-weight: 900;
-            padding-top: 1.25rem;
-            padding-bottom: 1.25rem;
-        }
-
-        .choice-btn:active { transform: scale(0.95); background: #34d399; color: #0f172a; }
-        
-        .feedback-pop {
-            position: absolute;
-            top: 40%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-            z-index: 100;
-            animation: feedbackAnim 0.8s cubic-bezier(0.17, 0.67, 0.83, 0.67) forwards;
-        }
-
-        @keyframes feedbackAnim {
-            0% { opacity: 0; transform: translate(-50%, -30%) scale(0.5); }
-            20% { opacity: 1; transform: translate(-50%, -55%) scale(1); }
-            100% { opacity: 0; transform: translate(-50%, -70%) scale(0.9); }
-        }
-
-        .rank-row {
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            transition: background 0.3s;
-        }
-        .rank-row:last-child { border-bottom: none; }
-    
-        
-        /* ボタンを真鍮のプレート風に */
-        .choice-btn {
-            background: linear-gradient(145deg, #b8860b, #8b4513) !important;
-            border: 3px solid #5d4037 !important;
-            box-shadow: inset 1px 1px 3px rgba(255,255,255,0.3), 0 4px 6px rgba(0,0,0,0.5) !important;
-            color: #fff8e1 !important;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.8) !important;
-            border-radius: 8px !important;
-            position: relative;
-            overflow: hidden;
-        }
-        /* ボタンの装飾用ネジを擬似要素で */
-        .choice-btn::before, .choice-btn::after {
-            content: ""; position: absolute; width: 6px; height: 6px;
-            background: #5d4037; border-radius: 50%; opacity: 0.6;
-        }
-        .choice-btn::before { top: 5px; left: 5px; }
-        .choice-btn::after { bottom: 5px; right: 5px; }
-
-        /* お題エリアを古紙＆金属枠風に */
-        #question-container {
-            background: #fdf5e6 !important;
-            border: 6px double #d4af37 !important;
-            box-shadow: 0 0 0 2px #5d4037, 0 10px 20px rgba(0,0,0,0.4) !important;
-            position: relative !important;
-            overflow: visible !important; /* 歯車をはみ出させるため */
-        }
-        /* 回転する歯車のアニメーション */
-        @keyframes gear-spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        .gear-visual {
-            position: absolute;
-            z-index: 0;
-            fill: #b8860b;
-            opacity: 0.2;
-            pointer-events: none;
-            animation: gear-spin 10s linear infinite;
-        }
-
-    
-        
-        #question-container {
-            background: #fdf5e6 !important;
-            border: 6px double #d4af37 !important;
-            position: relative !important;
-            overflow: hidden !important; 
-        }
-        @keyframes gear-spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        .gear-visible {
-            position: absolute !important;
-            z-index: 1 !important; 
-            fill: #b8860b !important;
-            opacity: 0.4 !important; /* 透明度を上げてはっきり見せる */
-            pointer-events: none;
-            animation: gear-spin 10s linear infinite;
-        }
-        #word-display {
-            position: relative !important;
-            z-index: 10 !important;
-        }
-
-    
-        /* --- 歯車可視化のための透過設定 --- */
-        #question-container {
-            /* 背景を半透明にして、背後の歯車を透かす */
-            background: rgba(253, 245, 230, 0.6) !important; 
-            border: 6px double #d4af37 !important;
-            position: relative !important;
-            overflow: hidden !important; 
-            z-index: 5 !important;
-        }
-        
-        @keyframes gear-spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        
-        .gear-final {
-            position: absolute !important;
-            /* 枠の背景より前(z-index: 6)、文字より後ろ(z-index: 10) */
-            z-index: 6 !important; 
-            fill: #b8860b !important;
-            opacity: 0.6 !important; /* はっきり見えるように不透明度を上げる */
-            pointer-events: none;
-            animation: gear-spin 10s linear infinite;
-        }
-        
-        #word-display {
-            position: relative !important;
-            z-index: 10 !important; /* 確実に一番前 */
-        }
-
-    
         .version-btn { background: none; border: none; padding: 0; cursor: pointer; width: 100%; max-width: 280px; margin: 0 auto; }
         .version-btn img { width: 100%; height: auto; display: block; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
         #version-screen.hidden { display: none !important; }
@@ -600,7 +193,7 @@
 <body>
     <div id="game-container" class="w-full relative overflow-hidden">
         <div class="absolute top-4 left-4 z-50 text-[10px] font-mono text-slate-500 tracking-widest pointer-events-none">
-            VER 4.0　New　question
+            VER 4.4
         </div>
 
         <!-- タイトル画面 -->
@@ -753,40 +346,38 @@
 
     <script>
 
-        // ==========================================
-        // 【ここにGASのURLを貼り付けてください】
-        const API_URL = "https://script.google.com/macros/s/AKfycbwpwalZph2UDQA8L6ojCNygSyUmbzziO9SutgfUGLJKl6Ak_Kxda5FFnC1VyeBQT8De8g/exec"; 
-        // ==========================================
+    // ==========================================
+    // 【ここにGASのURLを貼り付けてください】
+    const API_URL = "https://script.google.com/macros/s/AKfycbwpwalZph2UDQA8L6ojCNygSyUmbzziO9SutgfUGLJKl6Ak_Kxda5FFnC1VyeBQT8De8g/exec";
+    // ==========================================
 
-        let currentMode = '';
-        let currentVersion = 'new';
+    let currentMode = '';
+    let currentVersion = 'new';
 
-        function showVersionSelection(mode) {
-            currentMode = mode;
-            const vs = document.getElementById('version-screen');
-            const btns = document.getElementById('version-buttons');
-            const title = document.getElementById('version-title');
-            title.textContent = mode === 'stage' ? 'ステージモードを選択' : 'エンドレスを選択';
-            
-            const imgs = mode === 'stage' ? ['st1.png', 'st2.png'] : ['ed1.png', 'ed2.png'];
-            btns.innerHTML = `
-                <button onclick="selectVersion('old')" class="version-btn btn-press"><img src="${imgs[0]}" alt="旧"></button>
-                <button onclick="selectVersion('new')" class="version-btn btn-press"><img src="${imgs[1]}" alt="新"></button>
-            `;
-            document.getElementById('menu-screen').classList.add('hidden');
-            vs.classList.remove('hidden');
-        }
+    function showVersionSelection(m) {
+        currentMode = m;
+        const vs = document.getElementById('version-screen');
+        const btns = document.getElementById('version-buttons');
+        const title = document.getElementById('version-title');
+        title.textContent = m === 'stage' ? 'ステージモードを選択' : 'エンドレスを選択';
+        
+        const imgs = m === 'stage' ? ['st1.png', 'st2.png'] : ['ed1.png', 'ed2.png'];
+        btns.innerHTML = `
+            <button type="button" onclick="selectVersion('old')" class="version-btn btn-press"><img src="${imgs[0]}" alt="旧"></button>
+            <button type="button" onclick="selectVersion('new')" class="version-btn btn-press"><img src="${imgs[1]}" alt="新"></button>
+        `;
+        vs.classList.remove('hidden');
+    }
 
-        function backToMenu() {
-            document.getElementById('version-screen').classList.add('hidden');
-            document.getElementById('menu-screen').classList.remove('hidden');
-        }
+    function backToMenu() {
+        document.getElementById('version-screen').classList.add('hidden');
+    }
 
-        function selectVersion(v) {
-            currentVersion = v;
-            document.getElementById('version-screen').classList.add('hidden');
-            startGame(currentMode);
-        }
+    function selectVersion(v) {
+        currentVersion = v;
+        document.getElementById('version-screen').classList.add('hidden');
+        startGame(currentMode);
+    }
 
         // --- GAS連携設定 ---
         // ここにあなたのGASウェブアプリURLを貼り付けてください
