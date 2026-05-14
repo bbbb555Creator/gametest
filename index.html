@@ -186,7 +186,6 @@
     
         .version-btn { background: none; border: none; padding: 0; cursor: pointer; width: 100%; max-width: 280px; margin: 0 auto; }
         .version-btn img { width: 100%; height: auto; display: block; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
-        /* 物理的な重なりを防ぐために hidden時は display: none */
         #version-screen.hidden { display: none !important; }
 
     </style>
@@ -194,7 +193,7 @@
 <body>
     <div id="game-container" class="w-full relative overflow-hidden">
         <div class="absolute top-4 left-4 z-50 text-[10px] font-mono text-slate-500 tracking-widest pointer-events-none">
-            VER 4.8
+            VER 4.9
         </div>
 
         <!-- タイトル画面 -->
@@ -347,13 +346,12 @@
 
     <script>
 
-    // === GAS URL (5.0用) ===
+    // === 5.0設定 ===
     const API_URL = "https://script.google.com/macros/s/AKfycbwpwalZph2UDQA8L6ojCNygSyUmbzziO9SutgfUGLJKl6Ak_Kxda5FFnC1VyeBQT8De8g/exec";
-    
     let currentVersion = 'new';
     let pendingMode = '';
 
-    // 新旧選択画面を出す関数
+    // 新旧選択画面を出す
     function showVersionSelection(modeType) {
         pendingMode = modeType;
         const vs = document.getElementById('version-screen');
@@ -364,11 +362,10 @@
         const imgs = modeType === 'stage' ? ['st1.png', 'st2.png'] : ['ed1.png', 'ed2.png'];
         
         btns.innerHTML = `
-            <button type="button" onclick="finalizeVersion('old')" class="version-btn btn-press"><img src="${imgs[0]}" alt="旧"></button>
-            <button type="button" onclick="finalizeVersion('new')" class="version-btn btn-press"><img src="${imgs[1]}" alt="新"></button>
+            <button type="button" onclick="finalizeVersion('old')" class="version-btn btn-press"><img src="${imgs[0]}" alt="旧問題"></button>
+            <button type="button" onclick="finalizeVersion('new')" class="version-btn btn-press"><img src="${imgs[1]}" alt="新問題"></button>
         `;
         
-        // 遊び方画面(overlay)を隠して、新旧選択を出す
         document.getElementById('overlay').classList.add('hidden');
         vs.classList.remove('hidden');
     }
