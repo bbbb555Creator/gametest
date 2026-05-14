@@ -193,7 +193,7 @@
 <body>
     <div id="game-container" class="w-full relative overflow-hidden">
         <div class="absolute top-4 left-4 z-50 text-[10px] font-mono text-slate-500 tracking-widest pointer-events-none">
-            VER 4.5
+            VER 4.7
         </div>
 
         <!-- タイトル画面 -->
@@ -346,37 +346,49 @@
 
     <script>
 
-        // ==========================================
-        // 【ここに新しい5.0用のGAS URLを貼り付けてください】
-        const API_URL = "https://script.google.com/macros/s/AKfycbwpwalZph2UDQA8L6ojCNygSyUmbzziO9SutgfUGLJKl6Ak_Kxda5FFnC1VyeBQT8De8g/exec"; 
-        // ==========================================
+    // === GAS URL (5.0用) ===
+    const API_URL = "https://script.google.com/macros/s/AKfycbwpwalZph2UDQA8L6ojCNygSyUmbzziO9SutgfUGLJKl6Ak_Kxda5FFnC1VyeBQT8De8g/exec";
+    
+    let currentVersion = 'new';
+    let pendingMode = '';
 
-        let currentVersion = 'new';
-        let pendingMode = '';
+    // フロー変更: トップ -> 遊び方 -> 新旧選択
+    // 元の startGame(m) の中で overlay が表示されるロジックを利用する
+    
+    function showVersionSelection(modeType) {
+        pendingMode = modeType;
+        const vs = document.getElementById('version-screen');
+        const btns = document.getElementById('version-buttons');
+        const title = document.getElementById('version-title');
+        
+        title.textContent = modeType === 'stage' ? 'ステージモードを選択' : 'エンドレスを選択';
+        const imgs = modeType === 'stage' ? ['st1.png', 'st2.png'] : ['ed1.png', 'ed2.png'];
+        
+        btns.innerHTML = `
+            <button type="button" onclick="finalizeVersion('old')" class="version-btn btn-press"><img src="${imgs[0]}" alt="旧"></button>
+            <button type="button" onclick="finalizeSelection('new')" class="version-btn btn-press"><img src="${imgs[1]}" alt="新"></button>
+        `;
+        
+        // 遊び方画面を隠して、新旧選択を出す
+        document.getElementById('overlay').classList.add('hidden');
+        vs.classList.remove('hidden');
+    }
 
-        function showVersionSelection(modeType) {
-            pendingMode = modeType;
-            const vs = document.getElementById('version-screen');
-            const btns = document.getElementById('version-buttons');
-            const title = document.getElementById('version-title');
-            title.textContent = modeType === 'stage' ? 'ステージモードを選択' : 'エンドレスを選択';
-            const imgs = modeType === 'stage' ? ['st1.png', 'st2.png'] : ['ed1.png', 'ed2.png'];
-            btns.innerHTML = `
-                <button type="button" onclick="finalizeSelection('old')" class="version-btn btn-press"><img src="${imgs[0]}" alt="旧"></button>
-                <button type="button" onclick="finalizeSelection('new')" class="version-btn btn-press"><img src="${imgs[1]}" alt="新"></button>
-            `;
-            vs.classList.remove('hidden');
-        }
+    // 引数名を finalizeVersion に統一
+    function finalizeVersion(v) {
+        currentVersion = v;
+        document.getElementById('version-screen').classList.add('hidden');
+        // ここで初めて名前入力(name-screen)を出す
+        document.getElementById('name-screen').classList.remove('hidden');
+    }
+    
+    // 重複防止のためもう一つの関数名も定義
+    function finalizeSelection(v) { finalizeVersion(v); }
 
-        function backToMenu() {
-            document.getElementById('version-screen').classList.add('hidden');
-        }
-
-        function finalizeSelection(ver) {
-            currentVersion = ver;
-            document.getElementById('version-screen').classList.add('hidden');
-            startGame(pendingMode);
-        }
+    function backToMenuFromVersion() {
+        document.getElementById('version-screen').classList.add('hidden');
+        document.getElementById('menu-screen').classList.remove('hidden');
+    }
 
         // --- GAS連携設定 ---
         // ここにあなたのGASウェブアプリURLを貼り付けてください
