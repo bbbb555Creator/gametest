@@ -345,51 +345,66 @@ const DATA_OLD = {
             });
         }
 
-        function checkAnswer(selected, correct) {
+       function checkAnswer(selected, correct) {
+            // 解答時間を計算
             const solveTime = (Date.now() - questionStartTime) / 1000;
 
             if (selected === correct) {
                 playSFX('sfx-correct');
                 
                 let points = 0;
-                let feedback = '';
-                let color = '';
+                let rating = "";
+                let colorClass = "";
 
-                // ★「1秒以内なら1500点」のシステムを継承
-                if (solveTime <= 1.0) {
-                    points = 1500;
-                    feedback = 'EXCELLENT!!';
-                    color = 'text-yellow-400';
-                } else if (solveTime <= 2.0) {
-                    points = 1000;
-                    feedback = 'GOOD';
-                    color = 'text-emerald-400';
+                // 文吾が送ってくれたボーナス判定ロジック
+                if (solveTime < 1.2) {
+                    points = 1500; // 1000 + bonus 500
+                    rating = "EXCELLENT!!";
+                    colorClass = "text-yellow-300";
+                } else if (solveTime < 2.5) {
+                    points = 1200; // 1000 + bonus 200
+                    rating = "GREAT!";
+                    colorClass = "text-emerald-300";
                 } else {
-                    points = 500;
-                    feedback = 'OK';
-                    color = 'text-blue-400';
+                    points = 1000;
+                    rating = "GOOD";
+                    colorClass = "text-white";
                 }
 
+                // スコア加算と表示更新
                 score += points;
                 document.getElementById('total-score').innerText = score.toLocaleString();
                 
-                showFeedbackEffect(feedback, color);
+                // 画面に評価を出す演出を呼び出す
+                showFeedback(points, rating, colorClass);
 
                 currentQuestionIndex++;
                 updateBGM();
-                setTimeout(showQuestion, 400);
+                
+                // 演出を見せるために少し待ってから次の問題へ
+                setTimeout(showQuestion, 600);
             } else {
                 playSFX('sfx-wrong');
                 endGame(false);
             }
         }
 
-        function showFeedbackEffect(text, colorClass) {
+        // 演出用の関数（文吾の送ってくれたリッチなデザイン版）
+        function showFeedback(points, rating, colorClass) {
             const layer = document.getElementById('feedback-layer');
+            if (!layer) return;
+            
             const el = document.createElement('div');
-            el.className = `absolute inset-0 flex items-center justify-center text-5xl font-black italic pointer-events-none fade-out-up ${colorClass}`;
+            // アニメーション用のCSSクラス（fade-out-upなど）がある前提だよ
+            el.className = `absolute inset-0 flex items-center justify-center pointer-events-none fade-out-up`;
             el.style.zIndex = "100";
-            el.innerText = text;
+            
+            el.innerHTML = `
+                <div class="bg-slate-900/90 border-2 border-emerald-500 rounded-2xl px-6 py-4 shadow-[0_0_20px_rgba(52,211,153,0.4)] flex flex-col items-center min-w-[160px]">
+                    <div class="text-3xl font-black ${colorClass} drop-shadow-md mb-1 italic tracking-wider">${rating}</div>
+                    <div class="text-xl font-bold text-white">+${points.toLocaleString()}</div>
+                </div>
+            `;
             layer.appendChild(el);
             setTimeout(() => el.remove(), 800);
         }
