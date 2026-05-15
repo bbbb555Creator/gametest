@@ -194,11 +194,7 @@
     <script>
         const GAS_URL = "https://script.google.com/macros/s/AKfycbwpwalZph2UDQA8L6ojCNygSyUmbzziO9SutgfUGLJKl6Ak_Kxda5FFnC1VyeBQT8De8g/exec";
 
-// ==========================================
-// 【データ流し込み場所】
-// ==========================================
-
-// 1. 称号データ
+       // 1. 称号データ
 const ADJECTIVES = {
     A: ["鼻血が出そうな", "お湯も沸かせる", "味が濃すぎる", "地球を救いそうな", "牛乳を吹き出す", "目がバッキバキの", "100点満点を超えた", "止まると死ぬ", "お祭り騒ぎの", "筋肉痛になりそうな", "稲妻が走る", "本気を出しすぎた", "奇跡しか起きない", "絶好調すぎる", "燃えさかる", "声がデカすぎる", "夢にまで出てくる", "宇宙まで飛んでいく", "完璧に仕上がった", "神がかり的な", "爆笑を誘う", "まばたきを忘れた", "画面が割れそうな", "磁石のように吸い付く", "100年に一度の", "勢いが止まらない", "誰にも止められない", "太陽より熱い", "伝説になりそうな", "息継ぎなしの"],
     B: ["脂が乗ってきた", "おかわりが欲しい", "ノリにノっている", "鼻歌まじりの", "準備万端な", "歯切れの良い", "結構やる気な", "ドヤ顔がすぎる", "勢いがある", "ちょっと自慢げな", "期待を裏切らない", "かなりキマっている", "独自のキレがある", "油断ならない", "本気を出しかけた", "絶妙なタイミングの", "噂になりそうな", "磨けば光る", "安定感のある", "独自の進化をした", "声高らかな", "手応えバッチリの", "確信に満ちた", "意外と強気な", "独自のセンスが光る", "一味ちがう", "自信満々な", "スピードに乗った", "キラキラしている", "ちょうど食べごろな"],
@@ -343,37 +339,64 @@ const DATA_OLD = {
         }
 
         // ==========================================
-        // 【得点計算ロジック修正】
+        // 【得点計算システム修正：現行仕様】
         // ==========================================
         function checkAnswer(selected, correct) {
-            const timeTaken = (Date.now() - startTime) / 1000;
-            if (selected === correct) {
-                // 旧システムの得点仕様（1000点固定、あるいはシンプルな計算）に戻す
-                score += 1000; 
+            const isCorrect = (selected === correct);
+            
+            if (isCorrect) {
                 playSFX('sfx-correct');
-                showFeedback(true);
+                const timeTaken = (Date.now() - startTime) / 1000;
+                let bonus = 0;
+                let rating = "GOOD";
+                let ratingColor = "text-white";
+                
+                if (timeTaken < 1.2) {
+                    bonus = 500; rating = "EXCELLENT!!"; ratingColor = "text-yellow-300";
+                } else if (timeTaken < 2.5) {
+                    bonus = 200; rating = "GREAT!"; ratingColor = "text-emerald-300";
+                }
+
+                const points = 1000 + bonus;
+                score += points;
+                document.getElementById('total-score').textContent = Math.floor(score).toLocaleString();
+                showFeedback(points, rating, ratingColor);
+
                 currentQuestionIndex++;
-                setTimeout(showQuestion, 600);
+                setTimeout(() => {
+                    const totalQ = gameMode === 'stage' ? 60 : 200;
+                    if (currentQuestionIndex >= totalQ) {
+                        endGame(true);
+                    } else if (gameMode === 'stage' && currentQuestionIndex % 15 === 0) {
+                        // ステージクリア時のBGM更新などの処理が必要ならここ
+                        updateBGM();
+                        showQuestion();
+                    } else {
+                        showQuestion();
+                    }
+                }, 600);
             } else {
+                stopAllBGM();
                 playSFX('sfx-wrong');
-                showFeedback(false);
-                setTimeout(() => endGame(false, quizList[currentQuestionIndex]), 800);
+                endGame(false, quizList[currentQuestionIndex]);
             }
         }
 
-        function showFeedback(isCorrect) {
+        function showFeedback(points, rating, ratingColor) {
             const layer = document.getElementById('feedback-layer');
             const pop = document.createElement('div');
-            pop.className = 'absolute inset-0 flex items-center justify-center text-8xl font-black italic pointer-events-none fade-in';
-            pop.textContent = isCorrect ? '○' : '×';
-            pop.style.color = isCorrect ? '#34d399' : '#fb7185';
+            pop.className = 'absolute inset-0 flex flex-col items-center justify-center pointer-events-none fade-in z-50';
+            
+            pop.innerHTML = `
+                <div class="text-8xl font-black italic text-emerald-400 mb-2">○</div>
+                <div class="text-2xl font-black ${ratingColor} drop-shadow-md mb-1">${rating}</div>
+                <div class="text-xl font-bold text-yellow-400">+${points.toLocaleString()}</div>
+            `;
+            
             layer.appendChild(pop);
             setTimeout(() => pop.remove(), 800);
         }
 
-        // ==========================================
-        // 【称号生成ロジック】
-        // ==========================================
         function generateTitle(finalScore) {
             let rank = "E";
             if (finalScore >= 50000) rank = "A";
@@ -402,16 +425,21 @@ const DATA_OLD = {
             document.getElementById('overlay').classList.remove('hidden');
             document.getElementById('overlay-icon').textContent = isClear ? "🏆" : "⌛";
             document.getElementById('overlay-message').textContent = isClear ? "完全踏破" : "修行不足";
+            
+            const reviewBox = document.getElementById('review-box');
             if(!isClear && lastQ) {
-                document.getElementById('review-box').classList.remove('hidden');
+                reviewBox.classList.remove('hidden');
                 document.getElementById('rev-q').textContent = lastQ.q;
                 document.getElementById('rev-a').textContent = lastQ.a;
+            } else {
+                reviewBox.classList.add('hidden');
             }
 
             document.getElementById('score-report').innerHTML = `
                 <div class="text-4xl font-black text-yellow-400 mb-2">${finalScore.toLocaleString()}</div>
                 <div class="text-emerald-400 font-bold text-sm">称号：${title}</div>
             `;
+            
             const actionBtn = document.getElementById('action-btn');
             actionBtn.textContent = "スコア記録中...";
             try {
@@ -469,7 +497,7 @@ const DATA_OLD = {
                 const level = Math.floor(currentQuestionIndex / 15) + 1;
                 if(level === 2) tid = "bgm-stage2";
                 if(level === 3) tid = "bgm-stage3";
-                if(level === 4) tid = "bgm-stage4";
+                if(level >= 4) tid = "bgm-stage4";
             }
             ["bgm-stage1", "bgm-stage2", "bgm-stage3", "bgm-stage4", "bgm-endless", "bgm-ending"].forEach(id => {
                 const el = document.getElementById(id);
