@@ -91,7 +91,7 @@
 <body>
     <div id="game-container" class="w-full relative overflow-hidden">
         <div class="absolute top-4 left-4 z-50 text-[10px] font-mono text-slate-500 tracking-widest pointer-events-none">
-            VER 6.6　ranking
+            VER 6.7　tutorial
         </div>
 
         <div id="title-screen" class="flex-grow flex flex-col items-center justify-between text-center py-10 px-8 fade-in relative z-10">
@@ -114,22 +114,47 @@
             </div>
         </div>
 
-        <div id="instruction-screen-stage" class="hidden flex-grow flex flex-col items-center justify-center p-6 fade-in">
-            <h2 class="text-4xl font-black text-emerald-400 mb-8">遊び方</h2>
-            <div class="bg-slate-900/80 rounded-3xl p-8 border-2 border-emerald-500/30 text-slate-200 space-y-6 mb-10 w-full max-w-sm">
-                <p>表示された単語の<span class="text-emerald-400 font-bold">対義語</span>を4択から選ぼう。ミスは許されない！</p>
-            </div>
-            <button onclick="showVersionSelect()" class="w-full max-w-xs py-5 bg-emerald-600 rounded-2xl text-white font-black text-xl shadow-lg active:scale-95">次へ進む</button>
-        </div>
+       <div id="instruction-screen-stage" class="hidden flex-grow flex flex-col items-center justify-center p-6 fade-in">
+    <h2 class="text-4xl font-black text-emerald-400 mb-8">遊び方</h2>
+    <div class="bg-slate-900/80 rounded-3xl p-8 border-2 border-emerald-500/30 text-slate-200 mb-10 w-full max-w-sm">
+        <ul class="space-y-4 text-left">
+            <li class="flex items-start gap-3">
+                <span class="text-xl">⚔️</span>
+                <p>表示された単語の<span class="text-emerald-400 font-bold">対義語</span>を4択から選ぼう。</p>
+            </li>
+            <li class="flex items-start gap-3">
+                <span class="text-xl">⏱️</span>
+                <p>早く答えるほど<span class="text-yellow-400 font-bold">高得点！</span></p>
+            </li>
+            <li class="flex items-start gap-3">
+                <span class="text-xl">⚠️</span>
+                <p>たった一度のミスで<span class="text-rose-500 font-bold">ゲームオーバー。</span></p>
+            </li>
+        </ul>
+    </div>
+    <button onclick="showVersionSelect()" class="w-full max-w-xs py-5 bg-emerald-600 rounded-2xl text-white font-black text-xl shadow-lg active:scale-95 transition-transform">次へ進む</button>
+</div>
 
-        <div id="instruction-screen-endless" class="hidden flex-grow flex flex-col items-center justify-center p-6 fade-in">
-            <h2 class="text-4xl font-black text-blue-400 mb-8">エンドレス</h2>
-            <div class="bg-slate-900/80 rounded-3xl p-8 border-2 border-blue-500/30 text-slate-200 space-y-6 mb-10 w-full max-w-sm">
-                <p>ランダムに出題。どこまで集中力を維持できるか！</p>
-            </div>
-            <button onclick="showVersionSelect()" class="w-full max-w-xs py-5 bg-blue-600 rounded-2xl text-white font-black text-xl shadow-lg active:scale-95">次へ進む</button>
-        </div>
-
+<div id="instruction-screen-endless" class="hidden flex-grow flex flex-col items-center justify-center p-6 fade-in">
+    <h2 class="text-4xl font-black text-blue-400 mb-8">エンドレス</h2>
+    <div class="bg-slate-900/80 rounded-3xl p-8 border-2 border-blue-500/30 text-slate-200 mb-10 w-full max-w-sm">
+        <ul class="space-y-4 text-left">
+            <li class="flex items-start gap-3">
+                <span class="text-xl">🌀</span>
+                <p>全データから<span class="text-blue-400 font-bold">ランダム</span>に出題されるぞ。</p>
+            </li>
+            <li class="flex items-start gap-3">
+                <span class="text-xl">🔥</span>
+                <p>ミスするまで終わらない<span class="text-orange-400 font-bold">地獄モード。</span></p>
+            </li>
+            <li class="flex items-start gap-3">
+                <span class="text-xl">🏆</span>
+                <p>どこまで集中力を維持できるか！</p>
+            </li>
+        </ul>
+    </div>
+    <button onclick="showVersionSelect()" class="w-full max-w-xs py-5 bg-blue-600 rounded-2xl text-white font-black text-xl shadow-lg active:scale-95 transition-transform">次へ進む</button>
+</div>
         <div id="version-select-screen" class="hidden flex-grow flex flex-col items-center justify-center p-8 fade-in">
             <h2 class="text-3xl font-black text-white mb-8 text-center">問題を選択</h2>
             <div class="w-full max-w-xs space-y-6">
