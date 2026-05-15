@@ -112,7 +112,7 @@
 <body>
     <div id="game-container" class="w-full relative overflow-hidden">
         <div class="absolute top-4 left-4 z-50 text-[10px] font-mono text-slate-500 tracking-widest pointer-events-none">
-            VER 6.9　information
+            VER 6.7　tutorial
         </div>
 
         <div id="title-screen" class="flex-grow flex flex-col items-center justify-between text-center py-10 px-8 fade-in relative z-10">
@@ -122,11 +122,11 @@
                     <svg id="title-volume-off" class="h-6 w-6 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5zM23 9l-6 6M17 9l6 6"/></svg>
                 </button>
             </div>
-<div class="w-full absolute top-[5%] left-0">
+<div class="w-full absolute top-[15%] left-0">
                 <div class="ticker-container py-1">
                     <div class="ticker-text">
                         【更新情報】2026.05.15：新旧のバージョンで遊べるようになりました。　　　　
-                        【お知らせ】不具合報告は作者までお願いします
+                        【お知らせ】不具合報告は作者までお願いします。
                     </div>
                 </div>
             </div>
@@ -445,6 +445,14 @@ const DATA_OLD = {
                 showFeedback(points, rating, colorClass);
 
                 currentQuestionIndex++;
+                // --- ここから追加：ステージクリア演出 ---
+                if (gameMode === 'stage' && currentQuestionIndex % 15 === 0 && currentQuestionIndex < currentQuestions.length) {
+                    const stageNum = Math.floor(currentQuestionIndex / 15);
+                    showStageClearOverlay(stageNum); // 演出を表示
+                    updateBGM();
+                    return; // 次の問題へ進むのを一旦止める
+                }
+                // --- ここまで --
                 updateBGM();
                 setTimeout(showQuestion, 600);
             } else {
@@ -625,6 +633,34 @@ function displayRanking(data) {
                     if(id === tid) el.play().catch(()=>{}); else el.pause();
                 }
             });
+        } // ← updateBGMはここで終わり！
+
+        // ステージクリア演出（独立した関数として外に出す）
+        function showStageClearOverlay(stageNum) {
+            const ov = document.getElementById('overlay');
+            const icon = document.getElementById('overlay-icon');
+            const msg = document.getElementById('overlay-message');
+            const report = document.getElementById('score-report');
+            const btn = document.getElementById('action-btn');
+            const ranking = document.getElementById('ranking-container');
+            const review = document.getElementById('review-box');
+
+            ov.classList.remove('hidden');
+            review.classList.add('hidden');
+            ranking.classList.add('hidden');
+            
+            icon.innerText = '⭐';
+            msg.innerText = `STAGE ${stageNum} CLEAR!`;
+            report.innerHTML = `<div class="text-white text-xl font-black">次のステージも頑張ろう！</div>`;
+            
+            btn.innerText = "次のステージへ";
+            btn.onclick = () => {
+                ov.classList.add('hidden');
+                ranking.classList.remove('hidden');
+                showQuestion();
+            };
+            
+            playSFX('sfx-correct');
         }
     </script>
 </body>
