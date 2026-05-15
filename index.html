@@ -74,7 +74,7 @@
 <body>
     <div id="game-container" class="w-full relative overflow-hidden">
         <div class="absolute top-4 left-4 z-50 text-[10px] font-mono text-slate-500 tracking-widest pointer-events-none">
-            VER 5.5 Score Fixed Edition
+            VER 5.6
         </div>
 
         <div id="title-screen" class="flex-grow flex flex-col items-center justify-between text-center py-10 px-8 fade-in relative z-10">
@@ -345,8 +345,7 @@ const DATA_OLD = {
             });
         }
 
-       function checkAnswer(selected, correct) {
-            // 解答時間を計算
+      function checkAnswer(selected, correct) {
             const solveTime = (Date.now() - questionStartTime) / 1000;
 
             if (selected === correct) {
@@ -356,13 +355,12 @@ const DATA_OLD = {
                 let rating = "";
                 let colorClass = "";
 
-                // 文吾が送ってくれたボーナス判定ロジック
                 if (solveTime < 1.2) {
-                    points = 1500; // 1000 + bonus 500
+                    points = 1500;
                     rating = "EXCELLENT!!";
                     colorClass = "text-yellow-300";
                 } else if (solveTime < 2.5) {
-                    points = 1200; // 1000 + bonus 200
+                    points = 1200;
                     rating = "GREAT!";
                     colorClass = "text-emerald-300";
                 } else {
@@ -371,20 +369,17 @@ const DATA_OLD = {
                     colorClass = "text-white";
                 }
 
-                // スコア加算と表示更新
                 score += points;
                 document.getElementById('total-score').innerText = score.toLocaleString();
                 
-                // 画面に評価を出す演出を呼び出す
                 showFeedback(points, rating, colorClass);
 
                 currentQuestionIndex++;
                 updateBGM();
-                
-                // 演出を見せるために少し待ってから次の問題へ
                 setTimeout(showQuestion, 600);
             } else {
                 playSFX('sfx-wrong');
+                // 間違えたらすぐにリザルト(送信処理付き)へ
                 endGame(false);
             }
         }
@@ -410,6 +405,10 @@ const DATA_OLD = {
         }
 
         async function endGame(isClear) {
+            // 先に称号を確定させる
+            const title = generateTitle();
+            
+            // リザルト画面を表示
             document.getElementById('overlay').classList.remove('hidden');
             const icon = document.getElementById('overlay-icon');
             const msg = document.getElementById('overlay-message');
@@ -429,6 +428,23 @@ const DATA_OLD = {
                     document.getElementById('rev-a').innerText = lastQ.a;
                 }
             }
+
+            // スコアレポートの表示を更新（称号も表示）
+            document.getElementById('score-report').innerHTML = `
+                <div class="text-slate-400 text-xs mb-1 uppercase tracking-widest">Player</div>
+                <div class="text-white font-black text-xl mb-4">${playerName}</div>
+                <div class="text-slate-400 text-xs mb-1 uppercase tracking-widest">Title</div>
+                <div class="text-emerald-400 font-black text-lg mb-4">『${title}』</div>
+                <div class="text-slate-400 text-xs mb-1 uppercase tracking-widest">Final Score</div>
+                <div class="text-yellow-400 font-black text-4xl">${score.toLocaleString()}</div>
+            `;
+
+            // ★ここでGASに送信し、戻ってきた最新ランキングを表示する
+            // ランキング部分を「読み込み中...」にしておくと親切
+            document.getElementById('ranking-list').innerHTML = '<div class="text-center py-8 text-slate-500 animate-pulse text-xs">ランキング更新中...</div>';
+            
+            await sendScore(title);
+        }
 
             const title = generateTitle();
             document.getElementById('score-report').innerHTML = `
