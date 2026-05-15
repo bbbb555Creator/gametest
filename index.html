@@ -178,11 +178,11 @@
     <audio id="sfx-correct" preload="auto"><source src="maru.mp3" type="audio/mpeg"></audio>
     <audio id="sfx-wrong" preload="auto"><source src="batu.mp3" type="audio/mpeg"></audio>
 
-    <script>
+   <script>
         // ==========================================
         // 1. 称号・問題データ (流し込み用)
         // ==========================================
-        const ADJECTIVES = {
+       const ADJECTIVES = {
     A: ["鼻血が出そうな", "お湯も沸かせる", "味が濃すぎる", "地球を救いそうな", "牛乳を吹き出す", "目がバッキバキの", "100点満点を超えた", "止まると死ぬ", "お祭り騒ぎの", "筋肉痛になりそうな", "稲妻が走る", "本気を出しすぎた", "奇跡しか起きない", "絶好調すぎる", "燃えさかる", "声がデカすぎる", "夢にまで出てくる", "宇宙まで飛んでいく", "完璧に仕上がった", "神がかり的な", "爆笑を誘う", "まばたきを忘れた", "画面が割れそうな", "磁石のように吸い付く", "100年に一度の", "勢いが止まらない", "誰にも止められない", "太陽より熱い", "伝説になりそうな", "息継ぎなしの"],
     B: ["脂が乗ってきた", "おかわりが欲しい", "ノリにノっている", "鼻歌まじりの", "準備万端な", "歯切れの良い", "結構やる気な", "ドヤ顔がすぎる", "勢いがある", "ちょっと自慢げな", "期待を裏切らない", "かなりキマっている", "独自のキレがある", "油断ならない", "本気を出しかけた", "絶妙なタイミングの", "噂になりそうな", "磨けば光る", "安定感のある", "独自の進化をした", "声高らかな", "手応えバッチリの", "確信に満ちた", "意外と強気な", "独自のセンスが光る", "一味ちがう", "自信満々な", "スピードに乗った", "キラキラしている", "ちょうど食べごろな"],
     C: ["そこそこやる", "クラスで3番目の", "絶妙にふつうの", "意外と頑張る", "腹八分目の", "安定した", "ほどよい温度の", "どこにでもいる", "平均的な", "無難すぎる", "まあまあの", "どっちつかずの", "パッとしない", "ほどほどに温まった", "右へならえの", "標準的な", "可もなく不可もない", "世渡り上手な", "適当にこなす", "世間並みの", "ほどよく焼けた", "馴染みのある", "ど真ん中を行く", "箸休めのような", "まあまあの出来の", "それなりの", "目立たない", "安定の", "ちょうど真ん中の", "普通を極めた"],
@@ -238,14 +238,13 @@ const DATA_OLD = {
         {q:'メリット',a:'デメリット',d:['アセット','クレジット','リミット']},{q:'インドア',a:'アウトドア',d:['サイドドア','バックドア','ルーフ']},{q:'ポジティブ',a:'ネガティブ',d:['アクティブ','オルタナティブ','ネイティブ']},{q:'アナログ',a:'デジタル',d:['シグナル','チャネル','ビジュアル']},{q:'インフレ',a:'デフレ',d:['リフレ','デバフ','デリート']},{q:'プラス',a:'マイナス',d:['ボーナス','バランス','ステータス']},{q:'プロローグ',a:'エピローグ',d:['カタログ','モノローグ','ダイアログ']},{q:'マクロ',a:'ミクロ',d:['マグロ','レトロ','メトロ']},{q:'インプット',a:'アウトプット',d:['スループット','オフセット','アップセット']},{q:'メジャー',a:'マイナー',d:['レジャー','バリア','マスター']},{q:'アッパー',a:'ダウナー',d:['ショッパー','ホッパー','ストッパー']},{q:'バーチャル',a:'リアル',d:['ビジュアル','デジタル','メンタル']},{q:'マキシマム',a:'ミニマム',d:['ミディアム','プレミアム','アルバム']},{q:'パッシブ',a:'アクティブ',d:['ネガティブ','ポジティブ','プロアクティブ']},{q:'ハード',a:'ソフト',d:['カード','モード','ルート']},{q:'オン',a:'オフ',d:['アウト','オーバー','オープン']},{q:'ライト',a:'レフト',d:['ライド','リード','ラスト']},{q:'シンプル',a:'コンプレックス',d:['コミックス','デュプレックス','サービス']},{q:'メロディ',a:'リズム',d:['ハーモニー','コーラス','ライブ']},{q:'フィジカル',a:'メンタル',d:['ビジュアル','デジタル','メディカル']},{q:'インポート',a:'エクスポート',d:['サポート','レポート','トランスポート']},{q:'ドライ',a:'ウェット',d:['セット','ホット','カット']},{q:'マジョリティ',a:'マイノリティ',d:['クオリティ','セキュリティ','プロパティ']},{q:'ハイ',a:'ロー',d:['ニュートラル','ロング','ワイド']},{q:'ビギナー',a:'エキスパート',d:['プレイヤー','マネージャー','パートナー']},{q:'ストレート',a:'カーブ',d:['シュート','スライダー','フォーク']},{q:'アタック',a:'ディフェンス',d:['ガード','ブロック','リターン']},{q:'オリジナル',a:'コピー',d:['フェイク','カバー','レプリカ']},{q:'フロント',a:'バック',d:['センター','サイド','トップ']},{q:'エントリー',a:'イグジット',d:['リタイア','エディット','リセット']},{q:'ベスト',a:'ワースト',d:['ラスト','コスト','テスト']},{q:'ボトム',a:'トップ',d:['アップ','ピーク','ハイ']},{q:'スタート',a:'ゴール',d:['パス','エントリー','ストップ']},{q:'シンクロ',a:'アシンクロ',d:['ユニクロ','ユニゾン','コブクロ']},{q:'オーガニック',a:'ケミカル',d:['マジカル','フィジカル','テクニカル']},{q:'コンサバ',a:'プログレ',d:['アグレッシブ','カジュアル','モード']},{q:'ワイド',a:'ナロー',d:['スリム','タイト','ショート']},{q:'フィクション',a:'ノンフィクション',d:['ドキュメント','リアル','ファクト']},{q:'アップ',a:'ダウン',d:['オフ','アウト','バック']},{q:'オープン',a:'クローズ',d:['ロック','シール','エンド']},{q:'セーフ',a:'アウト',d:['ファウル','エラー','ストライク']},{q:'ピーク',a:'ボトム',d:['フィニッシュ','ラスト','エンド']},{q:'セントラル',a:'ペリフェラル',d:['アウトラル','シェル','カバー']},{q:'アウェー',a:'ホーム',d:['ハウス','ルーム','コート']},{q:'シングル',a:'ダブル',d:['ペア','コンビ','ユニット']},{q:'ショート',a:'ロング',d:['ワイド','トール','ラージ']},{q:'プロ',a:'アマ',d:['マスター','ルーキー','ファン']},{q:'ホワイト',a:'ブラック',d:['ブルー','レッド','グレー']},{q:'プッシュ',a:'プル',d:['プレス','タップ','スライド']},{q:'フロントエンド',a:'バックエンド',d:['サーバーサイド','クライアント','インフラ']}
     ]
 };
-
         // ==========================================
-        // 2. GAS設定 (修正前.txtから引用)
+        // 2. GAS設定
         // ==========================================
         const GAS_URL = 'https://script.google.com/macros/s/AKfycbz_uWOfN8YVnI8Y9O_0qWj1vT-R5-n5uXp4q_vXm1V_/exec';
 
         // ==========================================
-        // 3. ステージ設定 (修正前.txtから引用)
+        // 3. ステージ設定
         // ==========================================
         const STAGES = [
             { id: 'elementary', label: '初級', color: 'bg-emerald-500', count: 15 },
@@ -264,6 +263,7 @@ const DATA_OLD = {
         let currentQuestionIndex = 0;
         let score = 0;
         let isMuted = false;
+        let questionStartTime = 0; 
 
         function selectMode(mode) {
             gameMode = mode;
@@ -295,7 +295,7 @@ const DATA_OLD = {
             
             const source = currentVersion === 'new' ? DATA_NEW : DATA_OLD;
             if (gameMode === 'stage') {
-                currentQuestions = STAGES.flatMap(s => shuffle(source[s.id]).slice(0, s.count));
+                currentQuestions = STAGES.flatMap(s => shuffle(source[s.id] || []).slice(0, s.count));
             } else {
                 currentQuestions = shuffle(Object.values(source).flat());
             }
@@ -313,11 +313,14 @@ const DATA_OLD = {
             const qData = currentQuestions[currentQuestionIndex];
             const badge = document.getElementById('level-badge');
             
+            // ★updateUIの代わりにここでバッジ表示を更新
             if (gameMode === 'stage') {
                 const stageIdx = Math.floor(currentQuestionIndex / 15);
                 const stage = STAGES[stageIdx];
-                badge.innerText = `${stage.label} ${currentQuestionIndex % 15 + 1}/15`;
-                badge.className = `px-4 py-1.5 text-white text-xs rounded-full font-bold ${stage.color}`;
+                if (stage) {
+                    badge.innerText = `${stage.label} ${currentQuestionIndex % 15 + 1}/15`;
+                    badge.className = `px-4 py-1.5 text-white text-xs rounded-full font-bold ${stage.color}`;
+                }
             } else {
                 badge.innerText = `ENDLESS ${currentQuestionIndex + 1}`;
                 badge.className = `px-4 py-1.5 text-white text-xs rounded-full font-bold bg-slate-700`;
@@ -329,6 +332,10 @@ const DATA_OLD = {
             const choices = shuffle([qData.a, ...qData.d]);
             const grid = document.getElementById('choices-grid');
             grid.innerHTML = '';
+            
+            // ★出題した瞬間の時間を記録（スピード判定用）
+            questionStartTime = Date.now();
+
             choices.forEach(c => {
                 const btn = document.createElement('button');
                 btn.className = 'choice-btn w-full';
@@ -339,17 +346,52 @@ const DATA_OLD = {
         }
 
         function checkAnswer(selected, correct) {
+            const solveTime = (Date.now() - questionStartTime) / 1000;
+
             if (selected === correct) {
                 playSFX('sfx-correct');
-                score += (gameMode === 'stage' ? 1000 : 500) + (currentQuestionIndex * 10);
+                
+                let points = 0;
+                let feedback = '';
+                let color = '';
+
+                // ★「1秒以内なら1500点」のシステムを継承
+                if (solveTime <= 1.0) {
+                    points = 1500;
+                    feedback = 'EXCELLENT!!';
+                    color = 'text-yellow-400';
+                } else if (solveTime <= 2.0) {
+                    points = 1000;
+                    feedback = 'GOOD';
+                    color = 'text-emerald-400';
+                } else {
+                    points = 500;
+                    feedback = 'OK';
+                    color = 'text-blue-400';
+                }
+
+                score += points;
                 document.getElementById('total-score').innerText = score.toLocaleString();
+                
+                showFeedbackEffect(feedback, color);
+
                 currentQuestionIndex++;
                 updateBGM();
-                showQuestion();
+                setTimeout(showQuestion, 400);
             } else {
                 playSFX('sfx-wrong');
                 endGame(false);
             }
+        }
+
+        function showFeedbackEffect(text, colorClass) {
+            const layer = document.getElementById('feedback-layer');
+            const el = document.createElement('div');
+            el.className = `absolute inset-0 flex items-center justify-center text-5xl font-black italic pointer-events-none fade-out-up ${colorClass}`;
+            el.style.zIndex = "100";
+            el.innerText = text;
+            layer.appendChild(el);
+            setTimeout(() => el.remove(), 800);
         }
 
         async function endGame(isClear) {
@@ -367,8 +409,10 @@ const DATA_OLD = {
                 msg.innerText = 'GAME OVER';
                 review.classList.remove('hidden');
                 const lastQ = currentQuestions[currentQuestionIndex];
-                document.getElementById('rev-q').innerText = lastQ.q;
-                document.getElementById('rev-a').innerText = lastQ.a;
+                if (lastQ) {
+                    document.getElementById('rev-q').innerText = lastQ.q;
+                    document.getElementById('rev-a').innerText = lastQ.a;
+                }
             }
 
             const title = generateTitle();
@@ -391,8 +435,10 @@ const DATA_OLD = {
             else if (score >= 15000) rank = 'C';
             else if (score >= 5000) rank = 'D';
 
-            const adj = ADJECTIVES[rank][Math.floor(Math.random() * ADJECTIVES[rank].length)];
-            const noun = NOUNS[rank][Math.floor(Math.random() * NOUNS[rank].length)];
+            const adjList = ADJECTIVES[rank] || ['普通の'];
+            const nounList = NOUNS[rank] || ['挑戦者'];
+            const adj = adjList[Math.floor(Math.random() * adjList.length)];
+            const noun = nounList[Math.floor(Math.random() * nounList.length)];
             return adj + noun;
         }
 
@@ -435,14 +481,20 @@ const DATA_OLD = {
             document.getElementById("title-volume-on").classList.toggle('hidden', isMuted);
             document.getElementById("title-volume-off").classList.toggle('hidden', !isMuted);
             if (isMuted) {
-                ["bgm-stage1", "bgm-stage2", "bgm-stage3", "bgm-stage4", "bgm-endless", "bgm-ending"].forEach(id => document.getElementById(id).pause());
+                ["bgm-stage1", "bgm-stage2", "bgm-stage3", "bgm-stage4", "bgm-endless", "bgm-ending"].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.pause();
+                });
             } else {
                 updateBGM();
             }
         }
 
         function playSFX(id) { 
-            if (!isMuted) { const s = document.getElementById(id); s.currentTime = 0; s.play().catch(()=>{}); } 
+            if (!isMuted) { 
+                const s = document.getElementById(id); 
+                if (s) { s.currentTime = 0; s.play().catch(()=>{}); }
+            } 
         }
 
         function updateBGM() {
@@ -456,7 +508,9 @@ const DATA_OLD = {
             }
             ["bgm-stage1", "bgm-stage2", "bgm-stage3", "bgm-stage4", "bgm-endless", "bgm-ending"].forEach(id => {
                 const el = document.getElementById(id);
-                if(id === tid) el.play().catch(()=>{}); else el.pause();
+                if(el) {
+                    if(id === tid) el.play().catch(()=>{}); else el.pause();
+                }
             });
         }
     </script>
