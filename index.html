@@ -112,7 +112,7 @@
 <body>
     <div id="game-container" class="w-full relative overflow-hidden">
         <div class="absolute top-4 left-4 z-50 text-[10px] font-mono text-slate-500 tracking-widest pointer-events-none">
-            VER 6.9 Stage Clear
+            VER 3.0 infomation
         </div>
 
         <div id="title-screen" class="flex-grow flex flex-col items-center justify-between text-center py-10 px-8 fade-in relative z-10">
@@ -539,6 +539,17 @@ function displayRanking(data) {
     listContainer.innerHTML = html;
 }
         async function endGame(isClear) {
+            gameState = 'result';
+            
+            // --- 全てのBGMを停止してリセット ---
+            ["bgm-stage1", "bgm-stage2", "bgm-stage3", "bgm-stage4", "bgm-endless"].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.pause();
+                    el.currentTime = 0;
+                }
+            });
+
             const title = generateTitle();
             
             document.getElementById('overlay').classList.remove('hidden');
@@ -549,7 +560,9 @@ function displayRanking(data) {
             if (isClear) {
                 icon.innerText = '🏆';
                 msg.innerText = 'ALL CLEAR!';
-                playSFX('bgm-ending');
+                // 【完全制覇時のみ】エンディング曲を再生
+                const eb = document.getElementById('bgm-ending');
+                if (eb && !isMuted) eb.play().catch(()=>{});
             } else {
                 icon.innerText = '💀';
                 msg.innerText = 'GAME OVER';
@@ -559,6 +572,7 @@ function displayRanking(data) {
                     document.getElementById('rev-q').innerText = lastQ.q;
                     document.getElementById('rev-a').innerText = lastQ.a;
                 }
+                // 通常のゲームオーバー時は何もしない（無音）
             }
 
             document.getElementById('score-report').innerHTML = `
