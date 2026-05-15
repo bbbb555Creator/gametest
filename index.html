@@ -91,7 +91,7 @@
 <body>
     <div id="game-container" class="w-full relative overflow-hidden">
         <div class="absolute top-4 left-4 z-50 text-[10px] font-mono text-slate-500 tracking-widest pointer-events-none">
-            VER 6.3
+            VER 6.4
         </div>
 
         <div id="title-screen" class="flex-grow flex flex-col items-center justify-between text-center py-10 px-8 fade-in relative z-10">
@@ -419,16 +419,15 @@ const DATA_OLD = {
 async function sendScore(title) {
     try {
         const params = new URLSearchParams({
-            action: 'save',             // 保存アクションを指定
-            accessKey: '03162017Rfv',   // GAS側の認証キー
+            action: 'save',
+            accessKey: '03162017Rfv',
             name: playerName,
             score: score,
             title: title,
-            mode: gameMode,             // 'stage' or 'endless'
-            version: currentVersion     // 'new' or 'old'
+            mode: gameMode,
+            version: currentVersion
         });
 
-        // GETリクエストで送信
         const res = await fetch(`${GAS_URL}?${params.toString()}`);
         const data = await res.json();
         
