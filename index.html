@@ -70,12 +70,22 @@
             transition: background 0.3s;
         }
 
-        /* 修正：ボタンを最前面に */
         .interactive-btn {
             position: relative;
             z-index: 50;
             cursor: pointer;
         }
+        
+       @keyframes fadeOutUp {
+    0% { opacity: 0; transform: translateY(20px); }
+    20% { opacity: 1; transform: translateY(0); }
+    80% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-40px); }
+}
+.fade-out-up { 
+    animation: fadeOutUp 0.8s ease-out forwards; 
+    pointer-events: none; /* これが重要！演出がボタンに重なってもクリックを通す */
+}
     </style>
 </head>
 <body>
@@ -248,7 +258,7 @@ const DATA_OLD = {
         // ==========================================
         // 2. GAS設定
         // ==========================================
-        const GAS_URL = 'https://script.google.com/macros/s/AKfycbwpwalZph2UDQA8L6ojCNygSyUmbzziO9SutgfUGLJKl6Ak_Kxda5FFnC1VyeBQT8De8g/exec';
+        const GAS_URL = 'https://script.google.com/macros/s/AKfycbzwY3r-LT1-7NuvPmYS6xgj7ajOpbS1f7At41CWJUWbAvNJ1u2D0eElQfrWd3g_ywVKgA/exec';
 
         // ==========================================
         // 3. ステージ設定
@@ -389,22 +399,22 @@ const DATA_OLD = {
         }
 
         function showFeedback(points, rating, colorClass) {
-            const layer = document.getElementById('feedback-layer');
-            if (!layer) return;
-            
-            const el = document.createElement('div');
-            el.className = `absolute inset-0 flex items-center justify-center pointer-events-none fade-out-up`;
-            el.style.zIndex = "100";
-            
-            el.innerHTML = `
-                <div class="bg-slate-900/90 border-2 border-emerald-500 rounded-2xl px-6 py-4 shadow-[0_0_20px_rgba(52,211,153,0.4)] flex flex-col items-center min-w-[160px]">
-                    <div class="text-3xl font-black ${colorClass} drop-shadow-md mb-1 italic tracking-wider">${rating}</div>
-                    <div class="text-xl font-bold text-white">+${points.toLocaleString()}</div>
-                </div>
-            `;
-            layer.appendChild(el);
-            setTimeout(() => el.remove(), 800);
-        }
+    const layer = document.getElementById('feedback-layer');
+    if (!layer) return;
+    
+    const el = document.createElement('div');
+    // pointer-events-none を追加して、クリックを透過させる
+    el.className = `absolute inset-0 flex items-center justify-center pointer-events-none z-50`;
+    
+    el.innerHTML = `
+        <div class="bg-slate-900/90 border-2 border-emerald-500 rounded-2xl px-6 py-4 shadow-[0_0_20px_rgba(52,211,153,0.4)] flex flex-col items-center min-w-[160px] fade-out-up">
+            <div class="text-3xl font-black ${colorClass} drop-shadow-md mb-1 italic tracking-wider">${rating}</div>
+            <div class="text-xl font-bold text-white">+${points.toLocaleString()}</div>
+        </div>
+    `;
+    layer.appendChild(el);
+    setTimeout(() => el.remove(), 850);
+}
 
         async function endGame(isClear) {
             const title = generateTitle();
@@ -456,30 +466,44 @@ const DATA_OLD = {
             return adj + noun;
         }
 
-        async function sendScore(title) {
-            try {
-                const res = await fetch(GAS_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({ name: playerName, score: score, title: title })
-                });
-                const data = await res.json();
-                const list = document.getElementById('ranking-list');
-                list.innerHTML = data.map((r, i) => `
-                    <div class="rank-row flex items-center p-3 ${r.name === playerName && r.score === score ? 'bg-emerald-500/20' : ''}">
-                        <div class="w-8 font-black text-slate-500">${i+1}</div>
-                        <div class="flex-grow">
-                            <div class="text-white font-bold text-sm">${r.name}</div>
-                            <div class="text-[10px] text-slate-400">${r.title || '無名の戦士'}</div>
-                        </div>
-                        <div class="text-right">
-                            <div class="text-emerald-400 font-black text-sm">${r.score.toLocaleString()}</div>
-                        </div>
+       async function sendScore(title) {
+    try {
+        const params = new URLSearchParams({
+            action: 'save',
+            accessKey: '03162017Rfv',
+            name: playerName,
+            score: score,
+            title: title,
+            mode: gameMode,
+            version: currentVersion
+        });
+
+        const res = await fetch(`${GAS_URL}?${params.toString()}`);
+        const data = await res.json();
+        
+        const list = document.getElementById('ranking-list');
+        
+        if (data && Array.isArray(data)) {
+            list.innerHTML = data.map((r, i) => `
+                <div class="rank-row flex items-center p-3 ${r.name === playerName && r.score === score ? 'bg-emerald-500/20' : ''}">
+                    <div class="w-8 font-black text-slate-500">${i+1}</div>
+                    <div class="flex-grow">
+                        <div class="text-white font-bold text-sm">${r.name}</div>
+                        <div class="text-[10px] text-slate-400">${r.title || '無名の戦士'}</div>
                     </div>
-                `).join('');
-            } catch (e) {
-                console.error(e);
-            }
+                    <div class="text-right">
+                        <div class="text-emerald-400 font-black text-sm">${r.score.toLocaleString()}</div>
+                    </div>
+                </div>
+            `).join('');
+        } else {
+            list.innerHTML = '<div class="text-center py-8 text-slate-500 text-xs">データがありません</div>';
         }
+    } catch (e) {
+        console.error('Ranking Error:', e);
+        document.getElementById('ranking-list').innerHTML = '<div class="text-center py-8 text-rose-400 text-xs">通信に失敗しました</div>';
+    }
+}
 
         function shuffle(array) {
             const a = [...array];
