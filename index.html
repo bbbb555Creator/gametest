@@ -91,7 +91,7 @@
 <body>
     <div id="game-container" class="w-full relative overflow-hidden">
         <div class="absolute top-4 left-4 z-50 text-[10px] font-mono text-slate-500 tracking-widest pointer-events-none">
-            VER 6.8　button
+            VER 6.8　button　resize
         </div>
 
         <div id="title-screen" class="flex-grow flex flex-col items-center justify-between text-center py-10 px-8 fade-in relative z-10">
@@ -160,11 +160,12 @@
             <h2 class="text-3xl font-black text-white mb-8 text-center">問題を選択</h2>
             <div class="w-full max-w-xs space-y-6">
                 <button id="btn-version-new" onclick="setVersion('new')" 
-                    class="w-full h-32 rounded-2xl shadow-xl active:scale-95 bg-cover bg-center flex items-center justify-center relative overflow-hidden transition-transform">
-                    <span class="relative z-10 text-white font-black text-3xl drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">新問題</span>
-                    <div class="absolute inset-0 bg-black/20"></div>
+                    class="w-full h-24 rounded-xl shadow-xl active:scale-95 bg-contain bg-center bg-no-repeat transition-transform">
                 </button>
 
+                <button id="btn-version-old" onclick="setVersion('old')" 
+                    class="w-full h-24 rounded-xl shadow-xl active:scale-95 bg-contain bg-center bg-no-repeat transition-transform">
+                </button>
                 <button id="btn-version-old" onclick="setVersion('old')" 
                     class="w-full h-32 rounded-2xl shadow-xl active:scale-95 bg-cover bg-center flex items-center justify-center relative overflow-hidden transition-transform">
                     <span class="relative z-10 text-white font-black text-3xl drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">旧問題</span>
@@ -319,16 +320,17 @@ const DATA_OLD = {
         function selectMode(mode) {
             gameMode = mode;
             
-            // ボタンの要素を取得して画像を切り替える
             const btnNew = document.getElementById('btn-version-new');
             const btnOld = document.getElementById('btn-version-old');
 
+            // 背景画像のサイズを「枠内に収める」設定に固定
+            btnNew.style.backgroundSize = "contain";
+            btnOld.style.backgroundSize = "contain";
+
             if (mode === 'stage') {
-                // ステージモードの時の画像
                 btnNew.style.backgroundImage = "url('st2.png')";
                 btnOld.style.backgroundImage = "url('st1.png')";
             } else {
-                // サバイバル（エンドレス）モードの時の画像
                 btnNew.style.backgroundImage = "url('st.2png')";
                 btnOld.style.backgroundImage = "url('st1.png')";
             }
