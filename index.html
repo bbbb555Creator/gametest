@@ -112,7 +112,7 @@
 <body>
     <div id="game-container" class="w-full relative overflow-hidden">
         <div class="absolute top-4 left-4 z-50 text-[10px] font-mono text-slate-500 tracking-widest pointer-events-none">
-            VER 6.9　information
+            VER 6.9 Stage Clear
         </div>
 
         <div id="title-screen" class="flex-grow flex flex-col items-center justify-between text-center py-10 px-8 fade-in relative z-10">
@@ -445,14 +445,14 @@ const DATA_OLD = {
                 showFeedback(points, rating, colorClass);
 
                 currentQuestionIndex++;
-                // --- ここから追加：ステージクリア演出 ---
+
+                // --- ステージクリア演出 ---
                 if (gameMode === 'stage' && currentQuestionIndex % 15 === 0 && currentQuestionIndex < currentQuestions.length) {
                     const stageNum = Math.floor(currentQuestionIndex / 15);
-                    showStageClearOverlay(stageNum); // 演出を表示
-                    updateBGM();
-                    return; // 次の問題へ進むのを一旦止める
+                    showStageClearOverlay(stageNum); // 演出呼び出し
+                    return; // 次の問題やBGM更新へ進ませない
                 }
-                // --- ここまで --
+
                 updateBGM();
                 setTimeout(showQuestion, 600);
             } else {
@@ -648,19 +648,33 @@ function displayRanking(data) {
             ov.classList.remove('hidden');
             review.classList.add('hidden');
             ranking.classList.add('hidden');
+            report.classList.remove('hidden');
             
-            icon.innerText = '⭐';
-            msg.innerText = `STAGE ${stageNum} CLEAR!`;
-            report.innerHTML = `<div class="text-white text-xl font-black">次のステージも頑張ろう！</div>`;
+            // 3.1.2風の称号生成
+            const title = generateTitle(score, currentQuestionIndex);
             
-            btn.innerText = "次のステージへ";
+            icon.textContent = "🏅";
+            msg.innerHTML = `<span class="text-emerald-400">STAGE ${stageNum} クリア!</span><br>さらなる深淵へ...`;
+            
+            report.innerHTML = `
+                <div class="text-slate-400 text-sm mb-1">現在の暫定称号</div>
+                <div class="text-2xl font-black text-amber-400 mb-4">【${title}】</div>
+                <div class="text-slate-400 text-xs uppercase mb-1">Current Score</div>
+                <div class="text-5xl font-black text-yellow-400 mb-1">${score.toLocaleString()}</div>
+                <div class="text-emerald-500 text-xs font-bold animate-pulse">ステージクリア!</div>
+            `;
+            
+            btn.innerText = "次のステージへ進む";
+            btn.className = "w-full py-6 bg-emerald-600 rounded-3xl font-black text-2xl shadow-xl active:scale-95 transition-all text-white";
+            
             btn.onclick = () => {
                 ov.classList.add('hidden');
                 ranking.classList.remove('hidden');
+                updateBGM(); // ここで次のステージの曲に切り替え！
                 showQuestion();
             };
             
-            playSFX('sfx-correct');
+            playSFX('sfx-correct'); 
         }
     </script>
 </body>
