@@ -91,7 +91,7 @@
 <body>
     <div id="game-container" class="w-full relative overflow-hidden">
         <div class="absolute top-4 left-4 z-50 text-[10px] font-mono text-slate-500 tracking-widest pointer-events-none">
-            VER 6.5
+            VER 6.6　ranking
         </div>
 
         <div id="title-screen" class="flex-grow flex flex-col items-center justify-between text-center py-10 px-8 fade-in relative z-10">
@@ -441,7 +441,40 @@ async function sendScore(title) {
         console.error('ランキング保存エラー:', e);
     }
 }
+function displayRanking(data) {
+    const listContainer = document.getElementById('ranking-list');
+    if (!listContainer) return;
 
+    // データが空、またはエラーの場合
+    if (!data || data.error || !Array.isArray(data) || data.length === 0) {
+        listContainer.innerHTML = '<div class="text-center py-8 text-slate-500 text-xs">ランキングデータがありません</div>';
+        return;
+    }
+
+    // ランキングのHTMLを組み立てる
+    let html = '<div class="space-y-2">';
+    data.forEach((entry, index) => {
+        const medalColor = index === 0 ? 'text-yellow-400' : index === 1 ? 'text-slate-300' : index === 2 ? 'text-amber-600' : 'text-slate-500';
+        
+        html += `
+            <div class="flex items-center bg-slate-800/50 rounded-lg p-2 border border-slate-700/50">
+                <div class="w-8 flex-shrink-0 text-center font-black ${medalColor}">${index + 1}</div>
+                <div class="flex-grow min-w-0 px-2">
+                    <div class="text-white font-bold text-sm truncate">${entry.name}</div>
+                    <div class="text-[10px] text-emerald-400 truncate">${entry.title || "無名の戦士"}</div>
+                </div>
+                <div class="text-right flex-shrink-0">
+                    <div class="text-yellow-400 font-black text-sm">${Number(entry.score).toLocaleString()}</div>
+                    <div class="text-[9px] text-slate-500">${entry.date ? new Date(entry.date).toLocaleDateString() : ""}</div>
+                </div>
+            </div>
+        `;
+    });
+    html += '</div>';
+
+    // 画面に反映
+    listContainer.innerHTML = html;
+}
         async function endGame(isClear) {
             const title = generateTitle();
             
