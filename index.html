@@ -76,7 +76,7 @@
             cursor: pointer;
         }
         
-       @keyframes fadeOutUp {
+        @keyframes fadeOutUp {
     0% { opacity: 0; transform: translateY(20px); }
     20% { opacity: 1; transform: translateY(0); }
     80% { opacity: 1; transform: translateY(0); }
@@ -91,7 +91,7 @@
 <body>
     <div id="game-container" class="w-full relative overflow-hidden">
         <div class="absolute top-4 left-4 z-50 text-[10px] font-mono text-slate-500 tracking-widest pointer-events-none">
-            VER 5.5 Score Fixed Edition
+            VER 6.1
         </div>
 
         <div id="title-screen" class="flex-grow flex flex-col items-center justify-between text-center py-10 px-8 fade-in relative z-10">
@@ -116,38 +116,16 @@
 
         <div id="instruction-screen-stage" class="hidden flex-grow flex flex-col items-center justify-center p-6 fade-in">
             <h2 class="text-4xl font-black text-emerald-400 mb-8">遊び方</h2>
-            <div class="bg-slate-900/80 rounded-3xl p-8 border-2 border-emerald-500/30 text-slate-200 space-y-6 mb-10 w-full max-w-sm shadow-2xl backdrop-blur-md">
-                <div class="flex items-start gap-4">
-                    <span class="bg-emerald-500 text-slate-900 w-6 h-6 rounded-full flex items-center justify-center font-bold flex-shrink-0 mt-0.5">1</span>
-                    <p class="leading-relaxed">表示された単語の<span class="text-emerald-400 font-bold">対義語</span>を4択から選んでください。</p>
-                </div>
-                <div class="flex items-start gap-4">
-                    <span class="bg-emerald-500 text-slate-900 w-6 h-6 rounded-full flex items-center justify-center font-bold flex-shrink-0 mt-0.5">2</span>
-                    <p class="leading-relaxed">全60問。難易度は徐々に上昇。<br><span class="text-rose-400 font-bold">1問のミス</span>で即終了です。</p>
-                </div>
-                <div class="flex items-start gap-4">
-                    <span class="bg-emerald-500 text-slate-900 w-6 h-6 rounded-full flex items-center justify-center font-bold flex-shrink-0 mt-0.5">3</span>
-                    <p class="leading-relaxed">速度に応じて<span class="text-yellow-400 font-bold">ボーナス</span>加算！</p>
-                </div>
+            <div class="bg-slate-900/80 rounded-3xl p-8 border-2 border-emerald-500/30 text-slate-200 space-y-6 mb-10 w-full max-w-sm">
+                <p>表示された単語の<span class="text-emerald-400 font-bold">対義語</span>を4択から選ぼう。ミスは許されない！</p>
             </div>
             <button onclick="showVersionSelect()" class="w-full max-w-xs py-5 bg-emerald-600 rounded-2xl text-white font-black text-xl shadow-lg active:scale-95">次へ進む</button>
         </div>
 
         <div id="instruction-screen-endless" class="hidden flex-grow flex flex-col items-center justify-center p-6 fade-in">
             <h2 class="text-4xl font-black text-blue-400 mb-8">エンドレス</h2>
-            <div class="bg-slate-900/80 rounded-3xl p-8 border-2 border-blue-500/30 text-slate-200 space-y-6 mb-10 w-full max-w-sm shadow-2xl backdrop-blur-md">
-                <div class="flex items-start gap-4">
-                    <span class="bg-blue-500 text-slate-900 w-6 h-6 rounded-full flex items-center justify-center font-bold flex-shrink-0 mt-0.5">1</span>
-                    <p class="leading-relaxed">表示された単語の<span class="text-blue-400 font-bold">対義語</span>を4択から選んでください。</p>
-                </div>
-                <div class="flex items-start gap-4">
-                    <span class="bg-blue-500 text-slate-900 w-6 h-6 rounded-full flex items-center justify-center font-bold flex-shrink-0 mt-0.5">2</span>
-                    <p class="leading-relaxed">問題は全200問。ステージ1～4の問題をランダムで出題。<br>集中力が試される究極の修行です。</p>
-                </div>
-                <div class="flex items-start gap-4">
-                    <span class="bg-blue-500 text-slate-900 w-6 h-6 rounded-full flex items-center justify-center font-bold flex-shrink-0 mt-0.5">3</span>
-                    <p class="leading-relaxed">回答する速度に応じて<span class="text-yellow-400 font-bold">ボーナス</span>が加算されます。</p>
-                </div>
+            <div class="bg-slate-900/80 rounded-3xl p-8 border-2 border-blue-500/30 text-slate-200 space-y-6 mb-10 w-full max-w-sm">
+                <p>ランダムに出題。どこまで集中力を維持できるか！</p>
             </div>
             <button onclick="showVersionSelect()" class="w-full max-w-xs py-5 bg-blue-600 rounded-2xl text-white font-black text-xl shadow-lg active:scale-95">次へ進む</button>
         </div>
@@ -280,7 +258,7 @@ const DATA_OLD = {
         // ==========================================
         // 2. GAS設定
         // ==========================================
-        const GAS_URL = 'https://script.google.com/macros/s/AKfycbzwY3r-LT1-7NuvPmYS6xgj7ajOpbS1f7At41CWJUWbAvNJ1u2D0eElQfrWd3g_ywVKgA/exec';
+        const GAS_URL = 'https://script.google.com/macros/s/AKfycbwpwalZph2UDQA8L6ojCNygSyUmbzziO9SutgfUGLJKl6Ak_Kxda5FFnC1VyeBQT8De8g/exec';
 
         // ==========================================
         // 3. ステージ設定
@@ -311,9 +289,7 @@ const DATA_OLD = {
         }
 
         function showVersionSelect() {
-            // 両方の説明画面を隠してバージョン選択へ
-            document.getElementById('instruction-screen-stage').classList.add('hidden');
-            document.getElementById('instruction-screen-endless').classList.add('hidden');
+            document.getElementById(`instruction-screen-${gameMode}`).classList.add('hidden');
             document.getElementById('version-select-screen').classList.remove('hidden');
         }
 
@@ -440,6 +416,46 @@ const DATA_OLD = {
     setTimeout(() => el.remove(), 850);
 }
 
+// --- JavaScriptの sendScore 関数をこれに書き換え（GASのGET通信対応版） ---
+async function sendScore(title) {
+    try {
+        const params = new URLSearchParams({
+            action: 'save',
+            accessKey: '03162017Rfv',
+            name: playerName,
+            score: score,
+            title: title,
+            mode: gameMode,
+            version: currentVersion
+        });
+
+        const res = await fetch(`${GAS_URL}?${params.toString()}`);
+        const data = await res.json();
+        
+        const list = document.getElementById('ranking-list');
+        
+        if (data && Array.isArray(data)) {
+            list.innerHTML = data.map((r, i) => `
+                <div class="rank-row flex items-center p-3 ${r.name === playerName && r.score === score ? 'bg-emerald-500/20' : ''}">
+                    <div class="w-8 font-black text-slate-500">${i+1}</div>
+                    <div class="flex-grow">
+                        <div class="text-white font-bold text-sm">${r.name}</div>
+                        <div class="text-[10px] text-slate-400">${r.title || '無名の戦士'}</div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-emerald-400 font-black text-sm">${r.score.toLocaleString()}</div>
+                    </div>
+                </div>
+            `).join('');
+        } else {
+            list.innerHTML = '<div class="text-center py-8 text-slate-500 text-xs">データがありません</div>';
+        }
+    } catch (e) {
+        console.error('Ranking Error:', e);
+        document.getElementById('ranking-list').innerHTML = '<div class="text-center py-8 text-rose-400 text-xs">通信に失敗しました</div>';
+    }
+}
+
         async function endGame(isClear) {
             const title = generateTitle();
             
@@ -490,21 +506,21 @@ const DATA_OLD = {
             return adj + noun;
         }
 
-       async function sendScore(title) {
+        async function sendScore(title) {
     try {
+        // GETパラメータとしてデータを付与
         const params = new URLSearchParams({
-            action: 'save',
-            accessKey: '03162017Rfv',
             name: playerName,
             score: score,
-            title: title,
-            mode: gameMode,
-            version: currentVersion
+            title: title
         });
 
-        const res = await fetch(`${GAS_URL}?${params.toString()}`);
-        const data = await res.json();
+        // GASのURLにクエリを足して叩く
+        const res = await fetch(`${GAS_URL}?${params.toString()}`, {
+            method: 'GET'
+        });
         
+        const data = await res.json();
         const list = document.getElementById('ranking-list');
         
         if (data && Array.isArray(data)) {
@@ -521,11 +537,11 @@ const DATA_OLD = {
                 </div>
             `).join('');
         } else {
-            list.innerHTML = '<div class="text-center py-8 text-slate-500 text-xs">データがありません</div>';
+            list.innerHTML = '<div class="text-center py-8 text-slate-500 text-xs">ランキングデータが空です</div>';
         }
     } catch (e) {
         console.error('Ranking Error:', e);
-        document.getElementById('ranking-list').innerHTML = '<div class="text-center py-8 text-rose-400 text-xs">通信に失敗しました</div>';
+        document.getElementById('ranking-list').innerHTML = '<div class="text-center py-8 text-rose-400 text-xs">通信に失敗しました。GASの公開設定を確認してね</div>';
     }
 }
 
