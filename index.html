@@ -75,13 +75,12 @@
 </head>
 <body>
     <div id="game-container" class="w-full relative overflow-hidden">
-        <div class="absolute top-4 left-4 z-50 text-[10px] font-mono text-slate-500 tracking-widest pointer-events-none">VER 5.0 Dual Stage System</div>
+        <div class="absolute top-4 left-4 z-50 text-[10px] font-mono text-slate-500 tracking-widest pointer-events-none">VER 5.1 Dual Stage System</div>
         
         <div id="title-screen" class="flex-grow flex flex-col items-center justify-between text-center py-10 px-8 fade-in relative z-10">
             <div class="w-full flex justify-end">
                 <button onclick="toggleMute()" class="p-3 bg-slate-800/90 rounded-full text-slate-400 border border-slate-700">
                     <svg id="title-volume-on" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor"><path d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.686-3.686a1 1 0 011.111-.238zm5.459 2.158a1 1 0 011.414 0 7.5 7.5 0 010 10.608 1 1 0 01-1.414-1.414 5.5 5.5 0 000-7.78 1 1 0 010-1.414zm-2.828 2.828a1 1 0 011.414 0 3.5 3.5 0 010 4.95" /></svg>
-                    <svg id="title-volume-off" class="h-6 w-6 hidden" viewBox="0 0 20 20" fill="currentColor"><path d="M9.383 3.076A1 1 0 0110 4v12" /></svg>
                 </button>
             </div>
             <div class="flex-grow flex items-center justify-center w-full">
@@ -97,17 +96,28 @@
             </div>
         </div>
 
-        <div id="mode-select-screen" class="hidden flex-grow flex flex-col items-center justify-center p-6 fade-in">
-            <h2 class="text-3xl font-black text-white mb-8">モードを選択</h2>
-            <div id="mode-buttons-container" class="grid grid-cols-2 gap-4 w-full max-w-sm">
-                </div>
-            <button onclick="backToTitle()" class="mt-8 text-slate-500 font-bold">戻る</button>
-        </div>
-
         <div id="instruction-screen" class="hidden flex-grow flex flex-col items-center justify-center p-6 fade-in">
             <h2 id="inst-title" class="text-4xl font-black mb-8"></h2>
             <div id="inst-body" class="bg-slate-900/80 rounded-3xl p-8 border-2 text-slate-200 space-y-6 mb-10 w-full max-w-sm shadow-2xl backdrop-blur-md"></div>
             <button onclick="goToModeSelect()" class="w-full max-w-xs py-5 bg-slate-700 rounded-2xl text-white font-black text-xl shadow-lg active:scale-95">次へ進む</button>
+        </div>
+
+        <div id="mode-select-screen" class="hidden flex-grow flex flex-col items-center justify-center p-6 fade-in">
+            <div class="bg-slate-800/80 backdrop-blur-xl rounded-3xl p-6 shadow-2xl border border-slate-700 w-full max-w-sm">
+                <h2 class="text-3xl font-black text-white mb-8 text-center">モードを選択</h2>
+                <div id="mode-buttons-container" class="grid grid-cols-2 gap-4 w-full mb-6">
+                </div>
+                <div id="version-select" class="hidden space-y-4 pt-4 border-t border-slate-700">
+                    <p class="text-center font-bold text-slate-400 mb-2">問題セットを選択</p>
+                    <button onclick="startGame('old')" class="w-full py-8 bg-slate-100 text-slate-800 rounded-3xl font-black text-3xl shadow-xl active:scale-95 border-4 border-slate-300">
+                        旧システム版<br><span class="text-sm font-normal">（これまでの問題）</span>
+                    </button>
+                    <button onclick="startGame('new')" class="w-full py-8 bg-amber-400 text-slate-900 rounded-3xl font-black text-3xl shadow-xl active:scale-95 border-4 border-amber-500">
+                        新システム版<br><span class="text-sm font-normal">（追加された200問）</span>
+                    </button>
+                </div>
+                <button onclick="backToTitle()" class="w-full mt-8 text-slate-500 font-bold text-center">戻る</button>
+            </div>
         </div>
 
         <div id="nickname-screen" class="hidden flex-grow flex flex-col items-center justify-center p-6 fade-in">
@@ -121,27 +131,39 @@
                 <div class="text-emerald-400 font-black text-xl">第 <span id="q-num" class="text-3xl">1</span> / <span id="total-q-num">60</span> 問</div>
                 <div class="text-slate-400 font-bold text-lg">SCORE: <span id="total-score" class="text-white">0</span></div>
             </div>
-            
             <div id="question-container" class="w-full aspect-video rounded-2xl flex items-center justify-center mb-8 shadow-inner">
                 <svg class="gear-final w-24 h-24 -top-8 -left-8" viewBox="0 0 100 100"><path d="M50 30c-11 0-20 9-20 20s9 20 20 20 20-9 20-20-9-20-20-20zm0 32c-6.6 0-12-5.4-12-12s5.4-12 12-12 12 5.4 12 12-5.4 12-12 12z"/></svg>
                 <div id="question-word" class="text-5xl md:text-7xl font-black text-slate-900 tracking-tighter"></div>
             </div>
-
-            <div id="choices-grid" class="grid grid-cols-1 gap-4 w-full max-w-md mx-auto">
-                </div>
+            <div id="choices-grid" class="grid grid-cols-1 gap-4 w-full max-w-md mx-auto"></div>
         </div>
 
-        <div id="overlay" class="hidden fixed inset-0 bg-slate-950/95 z-[100] flex flex-col p-6 overflow-y-auto">
-            <div id="result-content" class="w-full max-w-md mx-auto text-center space-y-6 py-10">
+        <div id="result-screen" class="hidden fixed inset-0 bg-slate-950/95 z-[100] flex flex-col p-6 overflow-y-auto">
+            <div class="w-full max-w-md mx-auto text-center space-y-6 py-10">
+                <div class="bg-slate-800/80 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-slate-700">
+                    <p class="text-emerald-400 font-bold mb-2">FINAL SCORE</p>
+                    <div id="final-score" class="text-7xl font-black text-white mb-4 italic">0</div>
+                    
+                    <div class="bg-slate-900/50 rounded-2xl p-4 mb-8">
+                        <p class="text-slate-400 text-xs mb-1">獲得した称号</p>
+                        <div id="player-title" class="text-xl font-bold text-amber-400">---</div>
+                    </div>
+
+                    <div id="ranking-list" class="mb-8 text-left max-h-60 overflow-y-auto bg-slate-900/30 rounded-xl p-2 text-sm"></div>
+
+                    <button onclick="location.reload()" class="w-full py-5 bg-gradient-to-r from-slate-600 to-slate-700 text-white rounded-2xl font-bold text-xl shadow-lg active:scale-95">
+                        トップに戻る
+                    </button>
                 </div>
+            </div>
         </div>
     </div>
+
 <script>
-    // ユーザー指定のGAS URL
     const GAS_URL = "https://script.google.com/macros/s/AKfycbwpwalZph2UDQA8L6ojCNygSyUmbzziO9SutgfUGLJKl6Ak_Kxda5FFnC1VyeBQT8De8g/exec";
     
     let currentCategory = 'stage'; 
-    let currentMode = ''; // stage1, stage2, endless1, endless2
+    let currentMode = '';
     let playerName = "";
     let score = 0;
     let qIndex = 0;
@@ -198,19 +220,28 @@
 
     function selectMode(m) {
         currentMode = m;
+        // モードボタンを消して新旧選択ボタンを表示
+        document.getElementById('mode-buttons-container').classList.add('hidden');
+        document.getElementById('version-select').classList.remove('hidden');
+    }
+
+    function startGame(version) {
+        // バージョン選択に基づいて最終的なモード文字列を調整
+        if(version === 'new') {
+            currentMode = currentMode.includes('1') ? currentMode.replace('1', '2') : currentMode;
+        } else {
+            currentMode = currentMode.includes('2') ? currentMode.replace('2', '1') : currentMode;
+        }
         document.getElementById('mode-select-screen').classList.add('hidden');
         document.getElementById('nickname-screen').classList.remove('hidden');
     }
 
     function getQuestionSet() {
-        // 1なら旧、2なら新のデータを使用
-        const source = (currentMode.endsWith('1')) ? DATA_OLD : DATA_NEW;
-        
+        const source = currentMode.endsWith('2') ? DATA_NEW : DATA_OLD;
         if (MODE_CONFIG[currentMode].isEndless) {
             const all = [...source.elementary, ...source.intermediate, ...source.advanced, ...source.extra];
             return all.sort(() => Math.random() - 0.5).slice(0, 200);
         } else {
-            // ステージモードは各難易度15問ずつ（全60問）
             return [
                 ...source.elementary.sort(() => Math.random() - 0.5).slice(0, 15),
                 ...source.intermediate.sort(() => Math.random() - 0.5).slice(0, 15),
@@ -219,7 +250,8 @@
             ];
         }
     }
-function initialStart() {
+
+    function initialStart() {
         const input = document.getElementById('player-name').value.trim();
         if(!input) return alert("名前を入力してください");
         playerName = input;
@@ -235,7 +267,7 @@ function initialStart() {
     }
 
     function nextQuestion() {
-        if(qIndex >= questions.length) return endGame(true);
+        if(qIndex >= questions.length) return endGame();
         const q = questions[qIndex];
         qStartTime = Date.now();
         
@@ -258,9 +290,7 @@ function initialStart() {
     function checkAnswer(selected) {
         if(!gameActive) return;
         const q = questions[qIndex];
-        const isCorrect = (selected === q.a);
-        
-        if(isCorrect) {
+        if(selected === q.a) {
             const elapsed = (Date.now() - qStartTime) / 1000;
             let bonus = Math.max(1, 10 - elapsed);
             score += 100 * bonus;
@@ -270,47 +300,36 @@ function initialStart() {
         } else {
             gameActive = false;
             showFeedback(false);
-            setTimeout(() => endGame(false), 800);
+            setTimeout(() => endGame(), 800);
         }
     }
 
-  async function endGame() {
-        isGameActive = false;
+    async function endGame() {
+        gameActive = false;
         document.getElementById('game-screen').classList.add('hidden');
         document.getElementById('result-screen').classList.remove('hidden');
 
         const finalScore = Math.floor(score);
         document.getElementById('final-score').textContent = finalScore;
 
-        // --- ここから称号生成の差し替え ---
-        const rank = TITLES_CONFIG.getRank(finalScore); // スコアからランク（A〜E）を判定
-        const listA = TITLES_CONFIG.wordA[rank];      // そのランクの形容詞リスト
-        const listB = TITLES_CONFIG.wordB[rank];      // そのランクの名詞リスト
-        
-        // ランダムに1つずつ選ぶ
+        // 称号の生成
+        const rank = TITLES_CONFIG.getRank(finalScore);
+        const listA = TITLES_CONFIG.wordA[rank];
+        const listB = TITLES_CONFIG.wordB[rank];
         const wordA = listA[Math.floor(Math.random() * listA.length)];
         const wordB = listB[Math.floor(Math.random() * listB.length)];
-        
-        const titleName = wordA + wordB; // つなげて称号にする
-        document.getElementById('player-title').textContent = titleName;
-        // --- ここまで ---
+        document.getElementById('player-title').textContent = wordA + wordB;
 
-        // ランキング送信（既存の処理）
         try {
-            const response = await fetch(API_URL, {
+            const response = await fetch(GAS_URL, {
                 method: 'POST',
-                body: JSON.stringify({
-                    name: playerName,
-                    score: finalScore,
-                    mode: currentMode
-                })
+                body: JSON.stringify({ name: playerName, score: finalScore, mode: currentMode })
             });
             const rankData = await response.json();
             displayRanking(rankData);
-        } catch (e) {
-            console.error("Ranking Error", e);
-        }
+        } catch (e) { console.error("Ranking Error", e); }
     }
+
     function showFeedback(correct) {
         const div = document.createElement('div');
         div.className = "feedback-pop text-8xl font-black";
@@ -325,18 +344,16 @@ function initialStart() {
         let html = '<h3 class="text-center font-bold mb-4">全国ランキング</h3><table class="w-full text-sm"><tr><th class="p-2">順位</th><th class="p-2">名前</th><th class="p-2 text-right">スコア</th></tr>';
         data.forEach(r => {
             html += `<tr class="${r.name === playerName ? 'bg-emerald-900/40 text-emerald-400' : ''}">
-                        <td class="p-2 text-center">${r.rank}</td>
-                        <td class="p-2">${r.name}</td>
-                        <td class="p-2 text-right">${r.score}</td>
-                    </tr>`;
+                <td class="p-2 text-center">${r.rank}</td><td class="p-2">${r.name}</td><td class="p-2 text-right">${r.score}</td></tr>`;
         });
         list.innerHTML = html + '</table>';
     }
 
-    function toggleMute() { /* 任意の実装 */ }
+    function toggleMute() {}
     function backToTitle() { location.reload(); }
-// --- 称号用単語データ ---
-// --- 称号生成用データ ---
+
+// --- ここから下へデータを流し込んでね ---
+
 const TITLES_CONFIG = {
     // スコアに応じたランク決定（A～Eの5段階に調整）
     getRank: (score) => {
