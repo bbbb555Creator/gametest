@@ -219,266 +219,247 @@
             insane: [{q:'メリット',a:'デメリット',d:['アセット','クレジット','リミット']},{q:'インドア',a:'アウトドア',d:['サイドドア','バックドア','ルーフ']},{q:'ポジティブ',a:'ネガティブ',d:['アクティブ','オルタナティブ','ネイティブ']},{q:'アナログ',a:'デジタル',d:['シグナル','チャネル','ビジュアル']},{q:'インフレ',a:'デフレ',d:['リフレ','デバフ','デリート']},{q:'プラス',a:'マイナス',d:['ボーナス','バランス','ステータス']},{q:'プロローグ',a:'エピローグ',d:['カタログ','モノローグ','ダイアログ']},{q:'マクロ',a:'ミクロ',d:['マグロ','レトロ','メトロ']},{q:'インプット',a:'アウトプット',d:['スループット','オフセット','アップセット']},{q:'メジャー',a:'マイナー',d:['レジャー','バリア','マスター']},{q:'アッパー',a:'ダウナー',d:['ショッパー','ホッパー','ストッパー']},{q:'バーチャル',a:'リアル',d:['ビジュアル','デジタル','メンタル']},{q:'マキシマム',a:'ミニマム',d:['ミディアム','プレミアム','アルバム']},{q:'パッシブ',a:'アクティブ',d:['ネガティブ','ポジティブ','プロアクティブ']},{q:'ハード',a:'ソフト',d:['カード','モード','ルート']},{q:'オン',a:'オフ',d:['アウト','オーバー','オープン']},{q:'ライト',a:'レフト',d:['ライド','リード','ラスト']},{q:'シンプル',a:'コンプレックス',d:['コミックス','デュプレックス','サービス']},{q:'メロディ',a:'リズム',d:['ハーモニー','コーラス','ライブ']},{q:'フィジカル',a:'メンタル',d:['ビジュアル','デジタル','メディカル']},{q:'インポート',a:'エクスポート',d:['サポート','レポート','トランスポート']},{q:'ドライ',a:'ウェット',d:['セット','ホット','カット']},{q:'マジョリティ',a:'マイノリティ',d:['クオリティ','セキュリティ','プロパティ']},{q:'ハイ',a:'ロー',d:['ニュートラル','ロング','ワイド']},{q:'ビギナー',a:'エキスパート',d:['プレイヤー','マネージャー','パートナー']},{q:'ストレート',a:'カーブ',d:['シュート','スライダー','フォーク']},{q:'アタック',a:'ディフェンス',d:['ガード','ブロック','リターン']},{q:'オリジナル',a:'コピー',d:['フェイク','カバー','レプリカ']},{q:'フロント',a:'バック',d:['センター','サイド','トップ']},{q:'エントリー',a:'イグジット',d:['リタイア','エディット','リセット']},{q:'ベスト',a:'ワースト',d:['ラスト','コスト','テスト']},{q:'ボトム',a:'トップ',d:['アップ','ピーク','ハイ']},{q:'スタート',a:'ゴール',d:['パス','エントリー','ストップ']},{q:'シンクロ',a:'アシンクロ',d:['ユニクロ','ユニゾン','コブクロ']},{q:'オーガニック',a:'ケミカル',d:['マジカル','フィジカル','テクニカル']},{q:'コンサバ',a:'プログレ',d:['アグレッシブ','カジュアル','モード']},{q:'ワイド',a:'ナロー',d:['スリム','タイト','ショート']},{q:'フィクション',a:'ノンフィクション',d:['ドキュメント','リアル','ファクト']},{q:'アップ',a:'ダウン',d:['オフ','アウト','バック']},{q:'オープン',a:'クローズ',d:['ロック','シール','エンド']},{q:'セーフ',a:'アウト',d:['ファウル','エラー','ストライク']},{q:'ピーク',a:'ボトム',d:['フィニッシュ','ラスト','エンド']},{q:'セントラル',a:'ペリフェラル',d:['アウトラル','シェル','カバー']},{q:'アウェー',a:'ホーム',d:['ハウス','ルーム','コート']},{q:'シングル',a:'ダブル',d:['ペア','コンビ','ユニット']},{q:'ショート',a:'ロング',d:['ワイド','トール','ラージ']},{q:'プロ',a:'アマ',d:['マスター','ルーキー','ファン']},{q:'ホワイト',a:'ブラック',d:['ブルー','レッド','グレー']},{q:'プッシュ',a:'プル',d:['プレス','タップ','スライド']},{q:'フロントエンド',a:'バックエンド',d:['サーバーサイド','クライアント','インフラ']}]
         };
 
-        // ==========================================
-        // 3. ゲームロジック本体
-        // ==========================================
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbwpwalZph2UDQA8L6ojCNygSyUmbzziO9SutgfUGLJKl6Ak_Kxda5FFnC1VyeBQT8De8g/exec";
-
-        let gameMode = ''; 
-        let currentQuestions = [];
-        let currentQuestionIndex = 0;
-        let score = 0;
-        let combo = 0;
-        let startTime = 0;
-        let isMuted = false;
-        let selectedVersion = 'new';
-        let playerName = "";
-
-        function toggleMute() {
-            isMuted = !isMuted;
-            document.getElementById("title-volume-on").classList.toggle('hidden', isMuted);
-            document.getElementById("title-volume-off").classList.toggle('hidden', !isMuted);
-            if (isMuted) stopAllBGM(); else updateBGM();
-        }
-
-        function stopAllBGM() {
-            ["bgm-stage1", "bgm-stage2", "bgm-stage3", "bgm-stage4", "bgm-endless", "bgm-ending"].forEach(id => {
-                document.getElementById(id).pause();
-            });
-        }
-
-        function updateBGM() {
-            if (isMuted) return;
-            let tid = (gameMode === 'endless') ? "bgm-endless" : "bgm-stage1";
-            if (gameMode === 'stage') {
-                const level = Math.floor(currentQuestionIndex / 15) + 1;
-                if(level === 2) tid = "bgm-stage2";
-                if(level === 3) tid = "bgm-stage3";
-                if(level >= 4) tid = "bgm-stage4";
-            }
-            ["bgm-stage1", "bgm-stage2", "bgm-stage3", "bgm-stage4", "bgm-endless", "bgm-ending"].forEach(id => {
-                const el = document.getElementById(id);
-                if(id === tid) el.play().catch(()=>{}); else el.pause();
-            });
-        }
-
-        function selectMode(mode) {
-            gameMode = mode;
-            document.getElementById('title-screen').classList.add('hidden');
-            document.getElementById(`instruction-screen-${mode}`).classList.remove('hidden');
-        }
-
-        function showVersionSelect() {
-            document.getElementById(`instruction-screen-${gameMode}`).classList.add('hidden');
-            document.getElementById('version-select-screen').classList.remove('hidden');
-        }
-
-        function backToInstruction() {
-            document.getElementById('version-select-screen').classList.add('hidden');
-            document.getElementById(`instruction-screen-${gameMode}`).classList.remove('hidden');
-        }
-
-        function setVersion(ver) {
-            selectedVersion = ver;
-            document.getElementById('version-select-screen').classList.add('hidden');
-            document.getElementById('nickname-screen').classList.remove('hidden');
-        }
-
-        function initialStart() {
-            playerName = document.getElementById('player-name').value.trim() || "名無しの戦士";
-            document.getElementById('nickname-screen').classList.add('hidden');
-            document.getElementById('game-screen').classList.remove('hidden');
-            startNewGame();
-        }
-
-        function startNewGame() {
-            const data = (selectedVersion === 'new') ? DATA_NEW : DATA_OLD;
-            if (gameMode === 'stage') {
-                currentQuestions = [
-                    ...shuffle(data.elementary).slice(0,15),
-                    ...shuffle(data.intermediate).slice(0,15),
-                    ...shuffle(data.advanced).slice(0,15),
-                    ...shuffle(data.insane).slice(0,15)
-                ];
-            } else {
-                const all = [...data.elementary, ...data.intermediate, ...data.advanced, ...data.insane];
-                currentQuestions = shuffle(all);
-            }
-            currentQuestionIndex = 0;
-            score = 0;
-            combo = 0;
-            showQuestion();
-            updateBGM();
-        }
-
-        function showQuestion() {
-            if (currentQuestionIndex >= currentQuestions.length) {
-                endGame(true);
-                return;
-            }
-            const q = currentQuestions[currentQuestionIndex];
-            const choices = shuffle([q.a, ...q.d]);
+       // --- 3.ゲームロジック本体 ---
+        function checkAnswer(selected) {
+            const q = quizList[currentIndex];
+            const isCorrect = (selected === q.a);
             
-            document.getElementById('question-word').textContent = q.q;
-            const grid = document.getElementById('choices-grid');
-            grid.innerHTML = '';
-            choices.forEach(c => {
-                const btn = document.createElement('button');
-                btn.className = 'choice-btn w-full py-6 text-2xl font-bold rounded-xl transition-all active:scale-95';
-                btn.textContent = c;
-                btn.onclick = () => checkAnswer(c);
-                grid.appendChild(btn);
-            });
-
-            updateProgress();
-            startTime = Date.now();
-        }
-
-        function checkAnswer(ans) {
-            const q = currentQuestions[currentQuestionIndex];
-            if (ans === q.a) {
-                // スコア計算ロジック（修正版）
-                const timeTaken = (Date.now() - startTime) / 1000;
-                const speedBonus = Math.max(0, Math.floor((3 - timeTaken) * 100));
-                combo++;
-                const comboBonus = combo * 10;
-                const baseScore = 100;
-                const points = baseScore + speedBonus + comboBonus;
+            if (isCorrect) {
+                playSfx('sfx-correct');
+                const timeTaken = (Date.now() - questionStartTime) / 1000;
                 
+                let bonus = 0;
+                let rating = "GOOD";
+                let ratingColor = "text-white";
+                
+                // 以前の得点システムを再現
+                if (timeTaken < 1.0) {
+                    bonus = 500; 
+                    rating = "EXCELLENT!!"; 
+                    ratingColor = "text-yellow-300";
+                } else if (timeTaken < 2.0) {
+                    bonus = 200; 
+                    rating = "GREAT!"; 
+                    ratingColor = "text-emerald-300";
+                }
+
+                const points = 1000 + bonus;
                 score += points;
                 document.getElementById('total-score').textContent = score.toLocaleString();
                 
-                playSFX('sfx-correct');
-                showFeedback(true, points);
-                currentQuestionIndex++;
-                setTimeout(showQuestion, 600);
+                // フィードバック表示
+                showFeedback(points, rating, ratingColor);
+
+                currentIndex++;
+                setTimeout(() => {
+                    const totalQ = currentMode === 'stage' ? 60 : 200;
+                    if (currentIndex >= totalQ) {
+                        showResult(true);
+                    } else if (currentMode === 'stage' && currentIndex % 15 === 0) {
+                        showStageClear();
+                    } else {
+                        initQuiz();
+                    }
+                }, 600);
             } else {
-                playSFX('sfx-wrong');
-                showFeedback(false);
-                setTimeout(() => endGame(false), 800);
+                if (currentBgm) currentBgm.pause();
+                playSfx('sfx-wrong');
+                showResult(false);
             }
         }
 
-        function showFeedback(isCorrect, pts = 0) {
+        function showFeedback(points, rating, colorClass) {
             const layer = document.getElementById('feedback-layer');
-            const div = document.createElement('div');
-            div.className = `fixed inset-0 flex items-center justify-center z-50 pointer-events-none text-6xl font-black italic fade-in`;
-            div.style.color = isCorrect ? '#34d399' : '#f43f5e';
-            div.textContent = isCorrect ? `CORRECT! +${pts}` : 'MISS!';
-            layer.appendChild(div);
-            setTimeout(() => div.remove(), 600);
+            const el = document.createElement('div');
+            el.className = `feedback-pop flex flex-col items-center`;
+            el.innerHTML = `
+                <div class="bg-slate-900/90 border-2 border-emerald-500 rounded-2xl px-6 py-4 shadow-[0_0_20px_rgba(52,211,153,0.4)] flex flex-col items-center min-w-[160px]">
+                    <div class="text-3xl font-black ${colorClass} drop-shadow-md mb-1 italic tracking-wider">${rating}</div>
+                    <div class="text-xl font-bold text-white">+${points.toLocaleString()}</div>
+                </div>
+            `;
+            layer.appendChild(el);
+            setTimeout(() => el.remove(), 800);
         }
 
-        function updateProgress() {
-            const perc = (currentQuestionIndex / currentQuestions.length) * 100;
-            document.getElementById('progress-bar').style.width = `${perc}%`;
+        function showStageClear() {
+            const ov = document.getElementById('overlay');
+            ov.classList.remove('hidden');
+            document.getElementById('ranking-container').classList.add('hidden');
+            document.getElementById('review-box').classList.add('hidden');
+            document.getElementById('score-report').classList.remove('hidden');
             
-            const badge = document.getElementById('level-badge');
-            const step = Math.floor(currentQuestionIndex / 15);
-            const labels = ["初級", "中級", "上級", "弩級"];
-            const colors = ["bg-emerald-500", "bg-blue-500", "bg-purple-500", "bg-rose-500"];
-            badge.textContent = (gameMode === 'stage') ? labels[step] : "ENDLESS";
-            badge.className = `px-4 py-1.5 text-white text-xs rounded-full font-bold ${colors[step] || 'bg-slate-600'}`;
+            const title = generateTitle(score, currentIndex);
+            const scoreReport = document.getElementById('score-report');
+            scoreReport.innerHTML = `
+                <div class="text-slate-400 text-sm mb-1">現在の暫定称号</div>
+                <div class="text-2xl font-black text-amber-400 mb-4">【${title}】</div>
+                <div class="text-slate-400 text-xs uppercase mb-1">Current Score</div>
+                <div class="text-5xl font-black text-yellow-400 mb-1">${score.toLocaleString()}</div>
+                <div class="text-emerald-500 text-xs font-bold animate-pulse">ステージクリア!</div>
+            `;
+            document.getElementById('overlay-icon').textContent = "🏅";
+            document.getElementById('overlay-message').innerHTML = `<span class="text-emerald-400">STAGE ${currentIndex/15} クリア!</span><br>さらなる深淵へ...`;
+            const bt = document.getElementById('action-btn');
+            bt.textContent = "次のステージへ進む";
+            bt.className = "w-full py-6 bg-emerald-600 rounded-3xl font-black text-2xl shadow-xl active:scale-95 transition-all text-white";
+            bt.onclick = () => { ov.classList.add('hidden'); initQuiz(); };
         }
 
-        function endGame(isClear) {
-            stopAllBGM();
-            if (isClear) playSFX('bgm-ending');
-            
-            const overlay = document.getElementById('overlay');
-            overlay.classList.remove('hidden');
-            
-            document.getElementById('overlay-icon').textContent = isClear ? "🏆" : "💀";
-            document.getElementById('overlay-message').textContent = isClear ? "完全制覇！" : "無念...";
-            
-            const review = document.getElementById('review-box');
-            if (!isClear && currentQuestions[currentQuestionIndex]) {
-                review.classList.remove('hidden');
-                document.getElementById('rev-q').textContent = currentQuestions[currentQuestionIndex].q;
-                document.getElementById('rev-a').textContent = currentQuestions[currentQuestionIndex].a;
-            } else {
-                review.classList.add('hidden');
-            }
+        function generateTitle(totalScore, solvedCount) {
+            let sRank = 'E';
+            if (totalScore >= 70000) sRank = 'A';
+            else if (totalScore >= 50000) sRank = 'B';
+            else if (totalScore >= 30000) sRank = 'C';
+            else if (totalScore >= 10000) sRank = 'D';
 
-            const rankInfo = generateTitle(score);
-            document.getElementById('score-report').innerHTML = `
-                <div class="text-slate-400 text-xs mb-1">FINAL SCORE</div>
-                <div class="text-4xl font-black text-yellow-400 mb-4">${score.toLocaleString()}</div>
-                <div class="text-slate-400 text-xs mb-1">獲得した称号</div>
-                <div class="text-xl font-bold text-white">${rankInfo.fullTitle}</div>
+            let cRank = 'E';
+            const threshold = currentMode === 'stage' ? [60, 45, 30, 15] : [150, 100, 50, 20];
+            if (solvedCount >= threshold[0]) cRank = 'A';
+            else if (solvedCount >= threshold[1]) cRank = 'B';
+            else if (solvedCount >= threshold[2]) cRank = 'C';
+            else if (solvedCount >= threshold[3]) cRank = 'D';
+
+            const adj = ADJECTIVES[sRank][Math.floor(Math.random() * 30)];
+            const noun = NOUNS[cRank][Math.floor(Math.random() * 30)];
+            return `${adj}${noun}`;
+        }
+
+        async function showResult(isWin) {
+            const ov = document.getElementById('overlay');
+            ov.classList.remove('hidden');
+            document.getElementById('ranking-container').classList.remove('hidden');
+            document.getElementById('score-report').classList.remove('hidden');
+
+            const title = generateTitle(score, currentIndex);
+            const scoreReport = document.getElementById('score-report');
+            scoreReport.innerHTML = `
+                <div class="text-slate-400 text-sm mb-1">獲得称号</div>
+                <div class="text-2xl font-black text-amber-400 mb-4">【${title}】</div>
+                <div class="flex justify-between items-end">
+                    <div>
+                        <div class="text-slate-400 text-xs uppercase">Final Score</div>
+                        <div class="text-4xl font-black text-yellow-400">${score.toLocaleString()}</div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-slate-400 text-xs uppercase">Solved</div>
+                        <div class="text-2xl font-black text-slate-200">${currentIndex}<span class="text-sm ml-1 text-slate-400">問</span></div>
+                    </div>
+                </div>
+                <div id="ranking-status" class="text-emerald-500 text-[10px] font-bold mt-4 animate-pulse uppercase tracking-widest">スコア送信中...</div>
             `;
 
-            sendScore(playerName, score, rankInfo.fullTitle);
-        }
+            const m = document.getElementById('overlay-message');
+            const ic = document.getElementById('overlay-icon');
+            const review = document.getElementById('review-box');
+            const status = document.getElementById('ranking-status');
+            const bt = document.getElementById('action-btn');
 
-        function generateTitle(s) {
-            let grade = 'E';
-            if (s >= 15000) grade = 'A';
-            else if (s >= 10000) grade = 'B';
-            else if (s >= 5000) grade = 'C';
-            else if (s >= 2000) grade = 'D';
-
-            const adj = ADJECTIVES[grade][Math.floor(Math.random() * ADJECTIVES[grade].length)];
-            const noun = NOUNS[grade][Math.floor(Math.random() * NOUNS[grade].length)];
-            return { grade, fullTitle: adj + noun };
-        }
-
-        async function sendScore(name, score, title) {
-            const list = document.getElementById('ranking-list');
-            list.innerHTML = '<div class="p-4 text-center text-slate-500 animate-pulse">ランキング取得中...</div>';
-            
-            try {
-                // GASへのデータ送信
-                await fetch(GAS_URL, {
-                    method: "POST",
-                    mode: "no-cors",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ name, score, title, mode: gameMode, version: selectedVersion })
-                });
-                
-                setTimeout(fetchRanking, 1000);
-            } catch (e) {
-                list.innerHTML = '<div class="p-4 text-center text-rose-400">通信エラー</div>';
+            if (isWin) {
+                playBgm('bgm-ending');
+                ic.textContent = "👑";
+                m.textContent = currentMode === 'stage' ? "完全制覇！お見事です。" : "全200問踏破！伝説の語彙力です。";
+                review.classList.add('hidden');
+            } else {
+                ic.textContent = "💀";
+                m.innerHTML = `<span class="text-rose-500">サバイバル終了</span><br>記録: ${currentIndex} 問`;
+                const q = quizList[currentIndex];
+                document.getElementById('rev-q').textContent = q.q;
+                document.getElementById('rev-a').textContent = q.a;
+                review.classList.remove('hidden');
             }
+            
+            bt.textContent = isWin ? "もう一度挑戦" : "リベンジする";
+            bt.className = "w-full py-6 bg-emerald-600 rounded-3xl font-black text-2xl shadow-xl active:scale-95 transition-all text-white";
+            bt.onclick = () => startGame();
+
+            if (GAS_URL.includes("https")) {
+                try {
+                    await fetch(GAS_URL, {
+                        method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name: playerName, score: score, mode: currentMode, title: title, accessKey: "03162017Rfv" })
+                    });
+                    const res = await fetch(`${GAS_URL}?mode=${currentMode}`);
+                    const rankingData = await res.json();
+                    renderRanking(rankingData);
+                    status.textContent = "全国ランキング更新！";
+                } catch (e) { status.textContent = "通信エラー"; }
+            } else { status.textContent = "URL未設定"; }
         }
 
-        async function fetchRanking() {
-            try {
-                const res = await fetch(`${GAS_URL}?mode=${gameMode}&version=${selectedVersion}`);
-                const data = await res.json();
-                const list = document.getElementById('ranking-list');
-                list.innerHTML = data.map((r, i) => `
-                    <div class="rank-row flex items-center p-3 ${r.name === playerName && r.score === score ? 'bg-emerald-500/20' : ''}">
-                        <div class="w-8 font-black text-slate-500">${i+1}</div>
-                        <div class="flex-grow">
-                            <div class="text-white font-bold text-sm">${r.name}</div>
-                            <div class="text-[10px] text-slate-400">${r.title || '無名の戦士'}</div>
-                        </div>
-                        <div class="text-right">
-                            <div class="text-emerald-400 font-black text-sm">${r.score.toLocaleString()}</div>
+        function renderRanking(data) {
+            const list = document.getElementById('ranking-list');
+            const title = document.getElementById('ranking-title');
+            title.textContent = currentMode === 'stage' ? "Stage Mode Top 10" : "Endless Mode Top 10";
+            list.innerHTML = data.map((r, i) => `
+                <div class="flex justify-between items-center py-4 px-4 rank-row ${r.name === playerName ? 'bg-emerald-500/20' : ''}">
+                    <div class="flex items-center gap-3">
+                        <span class="w-6 text-xs font-black ${i<3 ? 'text-yellow-400' : 'text-slate-500'}">${i+1}</span>
+                        <div>
+                            <div class="text-sm font-bold text-slate-200">${r.name}</div>
+                            <div class="text-[12px] text-amber-500/90 font-bold mt-0.5">【${r.title || '無名の戦士'}】</div>
                         </div>
                     </div>
-                `).join('');
-            } catch (e) {
-                console.error(e);
-            }
+                    <span class="text-sm font-black text-emerald-400 font-mono">${Number(r.score).toLocaleString()}</span>
+                </div>
+            `).join('');
         }
 
-        function shuffle(array) {
-            const a = [...array];
-            for (let i = a.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [a[i], a[j]] = [a[j], a[i]];
-            }
-            return a;
-        }
+        function showInstallGuide() {
+            const ov = document.getElementById('overlay');
+            const ic = document.getElementById('overlay-icon');
+            const m = document.getElementById('overlay-message');
+            const review = document.getElementById('review-box');
+            const scoreReport = document.getElementById('score-report');
+            const rankingContainer = document.getElementById('ranking-container');
+            const bt = document.getElementById('action-btn');
 
-        function playSFX(id) { 
-            if (!isMuted) { 
-                const s = document.getElementById(id); 
-                if(s) { s.currentTime = 0; s.play().catch(()=>{}); }
-            } 
+            ov.classList.remove('hidden');
+            ic.textContent = "📲";
+            review.classList.add('hidden');
+            scoreReport.classList.add('hidden');
+            rankingContainer.classList.add('hidden');
+
+            const ua = navigator.userAgent.toLowerCase();
+            const isiOS = /iphone|ipad|ipod/.test(ua);
+            if (isiOS) {
+                m.innerHTML = `
+                    <div class="text-left text-base space-y-4 px-2">
+                        <p class="font-bold text-emerald-400 text-center text-xl mb-4">iPhone / iPad の方</p>
+                        <div class="flex items-center gap-3">
+                            <span class="bg-slate-700 w-6 h-6 rounded-full flex items-center justify-center text-xs">1</span>
+                            <p>Safariの下にある<span class="bg-slate-700 px-2 py-1 rounded">共有ボタン（□に↑）</span>を押す</p>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="bg-slate-700 w-6 h-6 rounded-full flex items-center justify-center text-xs">2</span>
+                            <p>メニューを下にスクロール</p>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="bg-slate-700 w-6 h-6 rounded-full flex items-center justify-center text-xs">3</span>
+                            <p><span class="text-white font-bold">「ホーム画面に追加」</span>を選択</p>
+                        </div>
+                    </div>
+                `;
+            } else {
+                m.innerHTML = `
+                    <div class="text-left text-base space-y-4 px-2">
+                        <p class="font-bold text-emerald-400 text-center text-xl mb-4">Android / Chrome の方</p>
+                        <div class="flex items-center gap-3">
+                            <span class="bg-slate-700 w-6 h-6 rounded-full flex items-center justify-center text-xs">1</span>
+                            <p>右上の<span class="bg-slate-700 px-2 py-1 rounded">三点リーダー（⋮）</span>を押す</p>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="bg-slate-700 w-6 h-6 rounded-full flex items-center justify-center text-xs">2</span>
+                            <p><span class="text-white font-bold">「アプリをインストール」</span>または<span class="text-white font-bold">「ホーム画面に追加」</span>を選択</p>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            bt.textContent = "戻る";
+            bt.className = "w-full py-6 bg-slate-700 text-white rounded-3xl font-black text-2xl shadow-xl mt-6";
+            bt.onclick = () => {
+                ov.classList.add('hidden');
+                rankingContainer.classList.remove('hidden');
+            };
         }
-    </script>
-</body>
-</html>
