@@ -91,7 +91,7 @@
 <body>
     <div id="game-container" class="w-full relative overflow-hidden">
         <div class="absolute top-4 left-4 z-50 text-[10px] font-mono text-slate-500 tracking-widest pointer-events-none">
-            VER 6.8　button　resize
+            VER 6.8
         </div>
 
         <div id="title-screen" class="flex-grow flex flex-col items-center justify-between text-center py-10 px-8 fade-in relative z-10">
@@ -155,22 +155,11 @@
     </div>
     <button onclick="showVersionSelect()" class="w-full max-w-xs py-5 bg-blue-600 rounded-2xl text-white font-black text-xl shadow-lg active:scale-95 transition-transform">次へ進む</button>
 </div>
-
         <div id="version-select-screen" class="hidden flex-grow flex flex-col items-center justify-center p-8 fade-in">
             <h2 class="text-3xl font-black text-white mb-8 text-center">問題を選択</h2>
             <div class="w-full max-w-xs space-y-6">
-                <button id="btn-version-new" onclick="setVersion('new')" 
-                    class="w-full h-24 rounded-xl shadow-xl active:scale-95 bg-contain bg-center bg-no-repeat transition-transform">
-                </button>
-
-                <button id="btn-version-old" onclick="setVersion('old')" 
-                    class="w-full h-24 rounded-xl shadow-xl active:scale-95 bg-contain bg-center bg-no-repeat transition-transform">
-                </button>
-                <button id="btn-version-old" onclick="setVersion('old')" 
-                    class="w-full h-32 rounded-2xl shadow-xl active:scale-95 bg-cover bg-center flex items-center justify-center relative overflow-hidden transition-transform">
-                    <span class="relative z-10 text-white font-black text-3xl drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">旧問題</span>
-                    <div class="absolute inset-0 bg-black/20"></div>
-                </button>
+                <button onclick="setVersion('new')" class="w-full py-6 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-2xl text-white font-black text-2xl shadow-xl active:scale-95">VOL.1</button>
+                <button onclick="setVersion('old')" class="w-full py-6 bg-gradient-to-r from-slate-600 to-slate-700 rounded-2xl text-slate-200 font-black text-2xl shadow-xl active:scale-95">VOL.2</button>
             </div>
             <button onclick="backToInstruction()" class="mt-8 text-slate-400 font-bold">戻る</button>
         </div>
@@ -230,6 +219,7 @@
     <audio id="bgm-ending" loop preload="auto"><source src="end.mp3" type="audio/mpeg"></audio>
     <audio id="sfx-correct" preload="auto"><source src="maru.mp3" type="audio/mpeg"></audio>
     <audio id="sfx-wrong" preload="auto"><source src="batu.mp3" type="audio/mpeg"></audio>
+
    <script>
         // ==========================================
         // 1. データ変数は外部から注入される前提
@@ -319,22 +309,6 @@ const DATA_OLD = {
 
         function selectMode(mode) {
             gameMode = mode;
-            
-            const btnNew = document.getElementById('btn-version-new');
-            const btnOld = document.getElementById('btn-version-old');
-
-            // 背景画像のサイズを「枠内に収める」設定に固定
-            btnNew.style.backgroundSize = "contain";
-            btnOld.style.backgroundSize = "contain";
-
-            if (mode === 'stage') {
-                btnNew.style.backgroundImage = "url('st2.png')";
-                btnOld.style.backgroundImage = "url('st1.png')";
-            } else {
-                btnNew.style.backgroundImage = "url('st.2png')";
-                btnOld.style.backgroundImage = "url('st1.png')";
-            }
-
             document.getElementById('title-screen').classList.add('hidden');
             document.getElementById(`instruction-screen-${mode}`).classList.remove('hidden');
         }
@@ -450,74 +424,82 @@ const DATA_OLD = {
         }
 
         function showFeedback(points, rating, colorClass) {
-            const layer = document.getElementById('feedback-layer');
-            if (!layer) return;
-            
-            const el = document.createElement('div');
-            el.className = `absolute inset-0 flex items-center justify-center pointer-events-none z-50`;
-            
-            el.innerHTML = `
-                <div class="bg-slate-900/90 border-2 border-emerald-500 rounded-2xl px-6 py-4 shadow-[0_0_20px_rgba(52,211,153,0.4)] flex flex-col items-center min-w-[160px] fade-out-up">
-                    <div class="text-3xl font-black ${colorClass} drop-shadow-md mb-1 italic tracking-wider">${rating}</div>
-                    <div class="text-xl font-bold text-white">+${points.toLocaleString()}</div>
+    const layer = document.getElementById('feedback-layer');
+    if (!layer) return;
+    
+    const el = document.createElement('div');
+    // pointer-events-none を追加して、クリックを透過させる
+    el.className = `absolute inset-0 flex items-center justify-center pointer-events-none z-50`;
+    
+    el.innerHTML = `
+        <div class="bg-slate-900/90 border-2 border-emerald-500 rounded-2xl px-6 py-4 shadow-[0_0_20px_rgba(52,211,153,0.4)] flex flex-col items-center min-w-[160px] fade-out-up">
+            <div class="text-3xl font-black ${colorClass} drop-shadow-md mb-1 italic tracking-wider">${rating}</div>
+            <div class="text-xl font-bold text-white">+${points.toLocaleString()}</div>
+        </div>
+    `;
+    layer.appendChild(el);
+    setTimeout(() => el.remove(), 850);
+}
+
+async function sendScore(title) {
+    try {
+        // 保存に必要な情報をすべてセットする
+        const params = new URLSearchParams({
+            action: 'save',
+            accessKey: '03162017Rfv', // GAS側で設定した合言葉
+            name: playerName,
+            score: score,
+            title: title,
+            mode: gameMode,
+            version: currentVersion
+        });
+        
+        // キャッシュを防ぐためにタイムスタンプ（_=${Date.now()}）を付ける
+        const url = `${GAS_URL}?${params.toString()}&_=${Date.now()}`;
+        
+        const res = await fetch(url);
+        const data = await res.json();
+        
+        // 保存後の最新ランキングを表示
+        displayRanking(data); 
+    } catch (e) {
+        console.error('ランキング保存エラー:', e);
+    }
+}
+function displayRanking(data) {
+    const listContainer = document.getElementById('ranking-list');
+    if (!listContainer) return;
+
+    // データが空、またはエラーの場合
+    if (!data || data.error || !Array.isArray(data) || data.length === 0) {
+        listContainer.innerHTML = '<div class="text-center py-8 text-slate-500 text-xs">ランキングデータがありません</div>';
+        return;
+    }
+
+    // ランキングのHTMLを組み立てる
+    let html = '<div class="space-y-2">';
+    data.forEach((entry, index) => {
+        const medalColor = index === 0 ? 'text-yellow-400' : index === 1 ? 'text-slate-300' : index === 2 ? 'text-amber-600' : 'text-slate-500';
+        
+        html += `
+            <div class="flex items-center bg-slate-800/50 rounded-lg p-2 border border-slate-700/50">
+                <div class="w-8 flex-shrink-0 text-center font-black ${medalColor}">${index + 1}</div>
+                <div class="flex-grow min-w-0 px-2">
+                    <div class="text-white font-bold text-sm truncate">${entry.name}</div>
+                    <div class="text-[10px] text-emerald-400 truncate">${entry.title || "無名の戦士"}</div>
                 </div>
-            `;
-            layer.appendChild(el);
-            setTimeout(() => el.remove(), 850);
-        }
+                <div class="text-right flex-shrink-0">
+                    <div class="text-yellow-400 font-black text-sm">${Number(entry.score).toLocaleString()}</div>
+                    <div class="text-[9px] text-slate-500">${entry.date ? new Date(entry.date).toLocaleDateString() : ""}</div>
+                </div>
+            </div>
+        `;
+    });
+    html += '</div>';
 
-        async function sendScore(title) {
-            try {
-                const params = new URLSearchParams({
-                    action: 'save',
-                    accessKey: '03162017Rfv', 
-                    name: playerName,
-                    score: score,
-                    title: title,
-                    mode: gameMode,
-                    version: currentVersion
-                });
-                
-                const url = `${GAS_URL}?${params.toString()}&_=${Date.now()}`;
-                const res = await fetch(url);
-                const data = await res.json();
-                displayRanking(data); 
-            } catch (e) {
-                console.error('ランキング保存エラー:', e);
-            }
-        }
-
-        function displayRanking(data) {
-            const listContainer = document.getElementById('ranking-list');
-            if (!listContainer) return;
-
-            if (!data || data.error || !Array.isArray(data) || data.length === 0) {
-                listContainer.innerHTML = '<div class="text-center py-8 text-slate-500 text-xs">ランキングデータがありません</div>';
-                return;
-            }
-
-            let html = '<div class="space-y-2">';
-            data.forEach((entry, index) => {
-                const medalColor = index === 0 ? 'text-yellow-400' : index === 1 ? 'text-slate-300' : index === 2 ? 'text-amber-600' : 'text-slate-500';
-                
-                html += `
-                    <div class="flex items-center bg-slate-800/50 rounded-lg p-2 border border-slate-700/50">
-                        <div class="w-8 flex-shrink-0 text-center font-black ${medalColor}">${index + 1}</div>
-                        <div class="flex-grow min-w-0 px-2">
-                            <div class="text-white font-bold text-sm truncate">${entry.name}</div>
-                            <div class="text-[10px] text-emerald-400 truncate">${entry.title || "無名の戦士"}</div>
-                        </div>
-                        <div class="text-right flex-shrink-0">
-                            <div class="text-yellow-400 font-black text-sm">${Number(entry.score).toLocaleString()}</div>
-                            <div class="text-[9px] text-slate-500">${entry.date ? new Date(entry.date).toLocaleDateString() : ""}</div>
-                        </div>
-                    </div>
-                `;
-            });
-            html += '</div>';
-            listContainer.innerHTML = html;
-        }
-
+    // 画面に反映
+    listContainer.innerHTML = html;
+}
         async function endGame(isClear) {
             const title = generateTitle();
             
