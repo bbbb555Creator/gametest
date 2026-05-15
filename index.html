@@ -6,7 +6,11 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#0f172a">
+    
     <title>対義語サバイバル - 全国ランキング版</title>
+    
+    <link rel="apple-touch-icon" href="icon.png">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;500;900&family=Noto+Serif+JP:wght@900&family=Sawarabi+Mincho&display=swap');
@@ -24,13 +28,19 @@
             margin: 0;
             padding: 0;
         }
-        #game-container { min-height: 100vh; display: flex; flex-direction: column; }
+
+        #game-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
         .fade-in { animation: fadeIn 0.4s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
         .logo-float { animation: float 4s ease-in-out infinite; }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-        
-        /* 真鍮風ボタンのスタイル */
+
         .choice-btn {
             background: linear-gradient(145deg, #b8860b, #8b4513) !important;
             border: 3px solid #5d4037 !important;
@@ -47,7 +57,7 @@
         }
         .choice-btn::before { top: 5px; left: 5px; }
         .choice-btn::after { bottom: 5px; right: 5px; }
-        
+
         #question-container {
             background: rgba(253, 245, 230, 0.6) !important;
             border: 6px double #d4af37 !important;
@@ -55,12 +65,14 @@
             overflow: hidden !important; 
             z-index: 5 !important;
         }
+
         @keyframes gear-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         .gear-final {
             position: absolute !important; z-index: 6 !important;
             fill: #b8860b !important; opacity: 0.6 !important;
             pointer-events: none; animation: gear-spin 10s linear infinite;
         }
+
         .feedback-pop {
             position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%);
             pointer-events: none; z-index: 100;
@@ -75,12 +87,12 @@
 </head>
 <body>
     <div id="game-container" class="w-full relative overflow-hidden">
-        <div class="absolute top-4 left-4 z-50 text-[10px] font-mono text-slate-500 tracking-widest pointer-events-none">VER 5.1 Dual Stage System</div>
-        
+        <div class="absolute top-4 left-4 z-50 text-[10px] font-mono text-slate-500 tracking-widest pointer-events-none">VER 5.2 Antonym Survival</div>
+
         <div id="title-screen" class="flex-grow flex flex-col items-center justify-between text-center py-10 px-8 fade-in relative z-10">
-            <div class="w-full flex justify-end">
-                <button onclick="toggleMute()" class="p-3 bg-slate-800/90 rounded-full text-slate-400 border border-slate-700">
-                    <svg id="title-volume-on" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor"><path d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.686-3.686a1 1 0 011.111-.238zm5.459 2.158a1 1 0 011.414 0 7.5 7.5 0 010 10.608 1 1 0 01-1.414-1.414 5.5 5.5 0 000-7.78 1 1 0 010-1.414zm-2.828 2.828a1 1 0 011.414 0 3.5 3.5 0 010 4.95" /></svg>
+            <div class="w-full flex justify-end gap-2">
+                <button onclick="showInstallInfo()" class="p-3 bg-slate-800/90 rounded-full text-slate-400 border border-slate-700">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
                 </button>
             </div>
             <div class="flex-grow flex items-center justify-center w-full">
@@ -103,21 +115,10 @@
         </div>
 
         <div id="mode-select-screen" class="hidden flex-grow flex flex-col items-center justify-center p-6 fade-in">
-            <div class="bg-slate-800/80 backdrop-blur-xl rounded-3xl p-6 shadow-2xl border border-slate-700 w-full max-w-sm">
-                <h2 class="text-3xl font-black text-white mb-8 text-center">モードを選択</h2>
-                <div id="mode-buttons-container" class="grid grid-cols-2 gap-4 w-full mb-6">
+            <h2 class="text-3xl font-black text-white mb-8">問題セットを選択</h2>
+            <div id="mode-buttons-container" class="grid grid-cols-2 gap-4 w-full max-w-sm mb-8">
                 </div>
-                <div id="version-select" class="hidden space-y-4 pt-4 border-t border-slate-700">
-                    <p class="text-center font-bold text-slate-400 mb-2">問題セットを選択</p>
-                    <button onclick="startGame('old')" class="w-full py-8 bg-slate-100 text-slate-800 rounded-3xl font-black text-3xl shadow-xl active:scale-95 border-4 border-slate-300">
-                        旧システム版<br><span class="text-sm font-normal">（これまでの問題）</span>
-                    </button>
-                    <button onclick="startGame('new')" class="w-full py-8 bg-amber-400 text-slate-900 rounded-3xl font-black text-3xl shadow-xl active:scale-95 border-4 border-amber-500">
-                        新システム版<br><span class="text-sm font-normal">（追加された200問）</span>
-                    </button>
-                </div>
-                <button onclick="backToTitle()" class="w-full mt-8 text-slate-500 font-bold text-center">戻る</button>
-            </div>
+            <button onclick="backToTitle()" class="text-slate-500 font-bold">戻る</button>
         </div>
 
         <div id="nickname-screen" class="hidden flex-grow flex flex-col items-center justify-center p-6 fade-in">
@@ -138,32 +139,17 @@
             <div id="choices-grid" class="grid grid-cols-1 gap-4 w-full max-w-md mx-auto"></div>
         </div>
 
-        <div id="result-screen" class="hidden fixed inset-0 bg-slate-950/95 z-[100] flex flex-col p-6 overflow-y-auto">
-            <div class="w-full max-w-md mx-auto text-center space-y-6 py-10">
-                <div class="bg-slate-800/80 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-slate-700">
-                    <p class="text-emerald-400 font-bold mb-2">FINAL SCORE</p>
-                    <div id="final-score" class="text-7xl font-black text-white mb-4 italic">0</div>
-                    
-                    <div class="bg-slate-900/50 rounded-2xl p-4 mb-8">
-                        <p class="text-slate-400 text-xs mb-1">獲得した称号</p>
-                        <div id="player-title" class="text-xl font-bold text-amber-400">---</div>
-                    </div>
-
-                    <div id="ranking-list" class="mb-8 text-left max-h-60 overflow-y-auto bg-slate-900/30 rounded-xl p-2 text-sm"></div>
-
-                    <button onclick="location.reload()" class="w-full py-5 bg-gradient-to-r from-slate-600 to-slate-700 text-white rounded-2xl font-bold text-xl shadow-lg active:scale-95">
-                        トップに戻る
-                    </button>
+        <div id="overlay" class="hidden fixed inset-0 bg-slate-950/95 z-[100] flex flex-col p-6 overflow-y-auto">
+            <div id="result-content" class="w-full max-w-md mx-auto text-center space-y-6 py-10">
                 </div>
-            </div>
         </div>
     </div>
 
 <script>
     const GAS_URL = "https://script.google.com/macros/s/AKfycbwpwalZph2UDQA8L6ojCNygSyUmbzziO9SutgfUGLJKl6Ak_Kxda5FFnC1VyeBQT8De8g/exec";
     
-    let currentCategory = 'stage'; 
-    let currentMode = '';
+    let currentCategory = 'stage'; // 'stage' or 'endless'
+    let currentMode = ''; // 'stage1', 'stage2', 'endless1', 'endless2'
     let playerName = "";
     let score = 0;
     let qIndex = 0;
@@ -220,23 +206,12 @@
 
     function selectMode(m) {
         currentMode = m;
-        // モードボタンを消して新旧選択ボタンを表示
-        document.getElementById('mode-buttons-container').classList.add('hidden');
-        document.getElementById('version-select').classList.remove('hidden');
-    }
-
-    function startGame(version) {
-        // バージョン選択に基づいて最終的なモード文字列を調整
-        if(version === 'new') {
-            currentMode = currentMode.includes('1') ? currentMode.replace('1', '2') : currentMode;
-        } else {
-            currentMode = currentMode.includes('2') ? currentMode.replace('2', '1') : currentMode;
-        }
         document.getElementById('mode-select-screen').classList.add('hidden');
         document.getElementById('nickname-screen').classList.remove('hidden');
     }
 
     function getQuestionSet() {
+        // モード名の末尾が '2' なら新データ、それ以外は旧データ
         const source = currentMode.endsWith('2') ? DATA_NEW : DATA_OLD;
         if (MODE_CONFIG[currentMode].isEndless) {
             const all = [...source.elementary, ...source.intermediate, ...source.advanced, ...source.extra];
@@ -307,27 +282,57 @@
     async function endGame() {
         gameActive = false;
         document.getElementById('game-screen').classList.add('hidden');
-        document.getElementById('result-screen').classList.remove('hidden');
+        const ov = document.getElementById('overlay');
+        const res = document.getElementById('result-content');
+        ov.classList.remove('hidden');
 
         const finalScore = Math.floor(score);
-        document.getElementById('final-score').textContent = finalScore;
-
-        // 称号の生成
         const rank = TITLES_CONFIG.getRank(finalScore);
-        const listA = TITLES_CONFIG.wordA[rank];
-        const listB = TITLES_CONFIG.wordB[rank];
-        const wordA = listA[Math.floor(Math.random() * listA.length)];
-        const wordB = listB[Math.floor(Math.random() * listB.length)];
-        document.getElementById('player-title').textContent = wordA + wordB;
+        const titleName = TITLES_CONFIG.wordA[rank][Math.floor(Math.random() * TITLES_CONFIG.wordA[rank].length)] + 
+                          TITLES_CONFIG.wordB[rank][Math.floor(Math.random() * TITLES_CONFIG.wordB[rank].length)];
+
+        res.innerHTML = `
+            <div class="bg-slate-800/80 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-slate-700">
+                <p class="text-emerald-400 font-bold mb-2">FINAL SCORE</p>
+                <div class="text-7xl font-black text-white mb-4 italic">${finalScore}</div>
+                <div class="bg-slate-900/50 rounded-2xl p-4 mb-8">
+                    <p class="text-slate-400 text-xs mb-1">獲得した称号</p>
+                    <div class="text-xl font-bold text-amber-400">${titleName}</div>
+                </div>
+                <div id="ranking-container" class="mb-8 text-left">
+                    <p class="text-center text-slate-500 animate-pulse">ランキング読み込み中...</p>
+                </div>
+                <button onclick="location.reload()" class="w-full py-5 bg-gradient-to-r from-slate-600 to-slate-700 text-white rounded-2xl font-bold text-xl shadow-lg active:scale-95">トップに戻る</button>
+            </div>
+        `;
 
         try {
             const response = await fetch(GAS_URL, {
                 method: 'POST',
                 body: JSON.stringify({ name: playerName, score: finalScore, mode: currentMode })
             });
-            const rankData = await response.json();
-            displayRanking(rankData);
-        } catch (e) { console.error("Ranking Error", e); }
+            const data = await response.json();
+            displayRanking(data);
+        } catch (e) {
+            document.getElementById('ranking-container').innerHTML = '<p class="text-center text-red-400">ランキングの取得に失敗しました</p>';
+        }
+    }
+
+    function displayRanking(data) {
+        const container = document.getElementById('ranking-container');
+        let html = '<h3 class="text-center font-bold mb-4">全国ランキング</h3><div class="space-y-2 max-h-64 overflow-y-auto pr-2">';
+        data.forEach(r => {
+            const isMe = r.name === playerName && r.score === Math.floor(score);
+            html += `
+                <div class="flex items-center justify-between p-3 rounded-xl ${isMe ? 'bg-emerald-500/20 border border-emerald-500/50' : 'bg-slate-900/50'}">
+                    <div class="flex items-center gap-3">
+                        <span class="text-xs font-mono ${isMe ? 'text-emerald-400' : 'text-slate-500'}">#${r.rank}</span>
+                        <span class="font-bold ${isMe ? 'text-emerald-400' : 'text-slate-200'}">${r.name}</span>
+                    </div>
+                    <span class="font-mono font-bold ${isMe ? 'text-emerald-400' : 'text-slate-400'}">${r.score}</span>
+                </div>`;
+        });
+        container.innerHTML = html + '</div>';
     }
 
     function showFeedback(correct) {
@@ -339,21 +344,29 @@
         setTimeout(() => div.remove(), 800);
     }
 
-    function displayRanking(data) {
-        const list = document.getElementById('ranking-list');
-        let html = '<h3 class="text-center font-bold mb-4">全国ランキング</h3><table class="w-full text-sm"><tr><th class="p-2">順位</th><th class="p-2">名前</th><th class="p-2 text-right">スコア</th></tr>';
-        data.forEach(r => {
-            html += `<tr class="${r.name === playerName ? 'bg-emerald-900/40 text-emerald-400' : ''}">
-                <td class="p-2 text-center">${r.rank}</td><td class="p-2">${r.name}</td><td class="p-2 text-right">${r.score}</td></tr>`;
-        });
-        list.innerHTML = html + '</table>';
+    function showInstallInfo() {
+        const ov = document.getElementById('overlay');
+        const res = document.getElementById('result-content');
+        ov.classList.remove('hidden');
+        const isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+        
+        res.innerHTML = `
+            <div class="bg-slate-800/80 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-slate-700">
+                <h2 class="text-2xl font-black text-white mb-6">アプリ化して遊ぶ</h2>
+                <div class="text-left space-y-4 text-slate-300">
+                    ${isiOS ? 
+                        `<p>1. 下の共有アイコン（<svg class="h-5 w-5 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>）をタップ</p><p>2. 「ホーム画面に追加」を選択</p>` :
+                        `<p>1. 右上のメニュー（⋮）をタップ</p><p>2. 「アプリをインストール」または「ホーム画面に追加」を選択</p>`
+                    }
+                </div>
+                <button onclick="document.getElementById('overlay').classList.add('hidden')" class="mt-8 w-full py-4 bg-slate-700 text-white rounded-2xl font-bold">戻る</button>
+            </div>
+        `;
     }
 
-    function toggleMute() {}
     function backToTitle() { location.reload(); }
 
-// --- ここから下へデータを流し込んでね ---
-
+// --- ここに【TITLES_CONFIG】【DATA_OLD】【DATA_NEW】を流し込む ---
 const TITLES_CONFIG = {
     // スコアに応じたランク決定（A～Eの5段階に調整）
     getRank: (score) => {
@@ -423,6 +436,7 @@ const DATA_NEW = {
         {q:'先発',a:'抑え',d:['代打', '完投', '併殺']},{q:'安打',a:'凡退',d:['失策', '盗塁', '出塁']},{q:'ゾーン',a:'マンマーク',d:['プレス', 'オフサイド', 'リベロ']},{q:'起点',a:'終点',d:['経由', '接点', '地点']},{q:'アウトコース',a:'インコース',d:['ラフ', 'バンカー', 'グリーン']},{q:'ドロー',a:'フェード',d:['フック', 'スライス', 'ロブ']},{q:'サーブ',a:'レシーブ',d:['トス', 'アタック', 'ブロック']},{q:'短距離',a:'長距離',d:['障害', '競歩', '跳躍']},{q:'押し',a:'引き',d:['投げ', '掛け', '反り']},{q:'ベビーフェイス',a:'ヒール',d:['レフェリー', 'セコンド', 'プロモーター']},{q:'確変',a:'通常',d:['時短', '潜伏', '単発']},{q:'貯玉',a:'交換',d:['貸出', '入金', '返却']},{q:'同期',a:'非同期',d:['転送', '圧縮', '暗号']},{q:'有線',a:'無線',d:['光速', '衛星', '回路']},{q:'冗長',a:'簡素',d:['最適', '精密', '強固']},{q:'論理削除',a:'物理削除',d:['一括削除', '上書き', '初期化']},{q:'強気',a:'弱気',d:['中立', '慎重', '楽観']},{q:'現物',a:'信用',d:['先物', 'オプション', '債券']},{q:'利確',a:'損切り',d:['成行', '指値', '逆指値']},{q:'更地',a:'上物',d:['廃墟', '宅地', '私道']},{q:'賃貸',a:'分譲',d:['管理', '仲介', '清掃']},{q:'急性期',a:'慢性期',d:['回復期', '終末期', '潜伏期']},{q:'往診',a:'来院',d:['回診', '転院', '退院']},{q:'初校',a:'校了',d:['再校', '入稿', '下版']},{q:'縦組み',a:'横組み',d:['平積み', '箱組み', '袋綴じ']},{q:'本番',a:'リハ',d:['収録', '編集', '中継']},{q:'実写',a:'特撮',d:['脚本', '配給', '合成']},{q:'入庫',a:'出庫',d:['検品', '保管', '配送']},{q:'発送',a:'着荷',d:['転送', '追跡', '不在']},{q:'接客',a:'調理',d:['清掃', '会計', '発注']},{q:'予約',a:'フリー',d:['延長', '指名', '団体']},{q:'既製服',a:'注文服',d:['古着', '私服', '制服']},{q:'前輪駆動',a:'後輪駆動',d:['四輪駆動', '自動運転', '電気走行']},{q:'往路',a:'復路',d:['直行', '経由', '途中']},{q:'国内線',a:'国際線',d:['貨物便', '定期便', '臨時便']},{q:'与党',a:'野党',d:['閣僚', '会派', '議連']},{q:'中央',a:'地方',d:['都心', '近郊', '離島']},{q:'原告',a:'被告',d:['検察', '弁護', '証人']},{q:'勝訴',a:'敗訴',d:['和解', '棄却', '上告']},{q:'定石',a:'奇策',d:['布石', '手止まり', '投了']},{q:'先手',a:'後手',d:['王手', '千日手', '投了']},{q:'独奏',a:'合奏',d:['伴奏', '斉唱', '指揮']},{q:'生演奏',a:'録音',d:['放送', '配信', '編曲']},{q:'表舞台',a:'舞台裏',d:['花道', '客席', '楽屋']},{q:'登頂',a:'下山',d:['滑落', '遭難', '設営']},{q:'露出',a:'潜伏',d:['制作', '審査', '沈黙']},{q:'登校',a:'下校',d:['休校', '転校', '不登校']},{q:'新規',a:'既存',d:['見込', '提携', '優良']},{q:'正社員',a:'非正規',d:['役員', '自営業', '内定']},{q:'卸売',a:'小売',d:['直販', '委託', '転売']}
     ]
 };
+
 </script>
 </body>
 </html>
