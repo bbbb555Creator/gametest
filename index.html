@@ -7,9 +7,6 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#0f172a">
     
-    <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="icon.png">
-    
     <title>対義語サバイバル - 全国ランキング版</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
@@ -79,16 +76,16 @@
             cursor: pointer;
         }
         
-        @keyframes fadeOutUp {
-            0% { opacity: 0; transform: translateY(20px); }
-            20% { opacity: 1; transform: translateY(0); }
-            80% { opacity: 1; transform: translateY(0); }
-            100% { opacity: 0; transform: translateY(-40px); }
-        }
-        .fade-out-up { 
-            animation: fadeOutUp 0.8s ease-out forwards; 
-            pointer-events: none;
-        }
+       @keyframes fadeOutUp {
+    0% { opacity: 0; transform: translateY(20px); }
+    20% { opacity: 1; transform: translateY(0); }
+    80% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-40px); }
+}
+.fade-out-up { 
+    animation: fadeOutUp 0.8s ease-out forwards; 
+    pointer-events: none; /* これが重要！演出がボタンに重なってもクリックを通す */
+}
     </style>
 </head>
 <body>
@@ -220,15 +217,11 @@
     <audio id="sfx-correct" preload="auto"><source src="maru.mp3" type="audio/mpeg"></audio>
     <audio id="sfx-wrong" preload="auto"><source src="batu.mp3" type="audio/mpeg"></audio>
 
-    <script>
-        // PWA サービスワーカーの登録
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js').catch(err => console.log('SW registration failed:', err));
-            });
-        }
-
-        const ADJECTIVES = {
+   <script>
+        // ==========================================
+        // 1. データ変数は外部から注入される前提
+        // ==========================================
+       const ADJECTIVES = {
     A: ["鼻血が出そうな", "お湯も沸かせる", "味が濃すぎる", "地球を救いそうな", "牛乳を吹き出す", "目がバッキバキの", "100点満点を超えた", "止まると死ぬ", "お祭り騒ぎの", "筋肉痛になりそうな", "稲妻が走る", "本気を出しすぎた", "奇跡しか起きない", "絶好調すぎる", "燃えさかる", "声がデカすぎる", "夢にまで出てくる", "宇宙まで飛んでいく", "完璧に仕上がった", "神がかり的な", "爆笑を誘う", "まばたきを忘れた", "画面が割れそうな", "磁石のように吸い付く", "100年に一度の", "勢いが止まらない", "誰にも止められない", "太陽より熱い", "伝説になりそうな", "息継ぎなしの"],
     B: ["脂が乗ってきた", "おかわりが欲しい", "ノリにノっている", "鼻歌まじりの", "準備万端な", "歯切れの良い", "結構やる気な", "ドヤ顔がすぎる", "勢いがある", "ちょっと自慢げな", "期待を裏切らない", "かなりキマっている", "独自のキレがある", "油断ならない", "本気を出しかけた", "絶妙なタイミングの", "噂になりそうな", "磨けば光る", "安定感のある", "独自の進化をした", "声高らかな", "手応えバッチリの", "確信に満ちた", "意外と強気な", "独自のセンスが光る", "一味ちがう", "自信満々な", "スピードに乗った", "キラキラしている", "ちょうど食べごろな"],
     C: ["そこそこやる", "クラスで3番目の", "絶妙にふつうの", "意外と頑張る", "腹八分目の", "安定した", "ほどよい温度の", "どこにでもいる", "平均的な", "無難すぎる", "まあまあの", "どっちつかずの", "パッとしない", "ほどほどに温まった", "右へならえの", "標準的な", "可もなく不可もない", "世渡り上手な", "適当にこなす", "世間並みの", "ほどよく焼けた", "馴染みのある", "ど真ん中を行く", "箸休めのような", "まあまあの出来の", "それなりの", "目立たない", "安定の", "ちょうど真ん中の", "普通を極めた"],
@@ -284,16 +277,266 @@ const DATA_OLD = {
         {q:'メリット',a:'デメリット',d:['アセット','クレジット','リミット']},{q:'インドア',a:'アウトドア',d:['サイドドア','バックドア','ルーフ']},{q:'ポジティブ',a:'ネガティブ',d:['アクティブ','オルタナティブ','ネイティブ']},{q:'アナログ',a:'デジタル',d:['シグナル','チャネル','ビジュアル']},{q:'インフレ',a:'デフレ',d:['リフレ','デバフ','デリート']},{q:'プラス',a:'マイナス',d:['ボーナス','バランス','ステータス']},{q:'プロローグ',a:'エピローグ',d:['カタログ','モノローグ','ダイアログ']},{q:'マクロ',a:'ミクロ',d:['マグロ','レトロ','メトロ']},{q:'インプット',a:'アウトプット',d:['スループット','オフセット','アップセット']},{q:'メジャー',a:'マイナー',d:['レジャー','バリア','マスター']},{q:'アッパー',a:'ダウナー',d:['ショッパー','ホッパー','ストッパー']},{q:'バーチャル',a:'リアル',d:['ビジュアル','デジタル','メンタル']},{q:'マキシマム',a:'ミニマム',d:['ミディアム','プレミアム','アルバム']},{q:'パッシブ',a:'アクティブ',d:['ネガティブ','ポジティブ','プロアクティブ']},{q:'ハード',a:'ソフト',d:['カード','モード','ルート']},{q:'オン',a:'オフ',d:['アウト','オーバー','オープン']},{q:'ライト',a:'レフト',d:['ライド','リード','ラスト']},{q:'シンプル',a:'コンプレックス',d:['コミックス','デュプレックス','サービス']},{q:'メロディ',a:'リズム',d:['ハーモニー','コーラス','ライブ']},{q:'フィジカル',a:'メンタル',d:['ビジュアル','デジタル','メディカル']},{q:'インポート',a:'エクスポート',d:['サポート','レポート','トランスポート']},{q:'ドライ',a:'ウェット',d:['セット','ホット','カット']},{q:'マジョリティ',a:'マイノリティ',d:['クオリティ','セキュリティ','プロパティ']},{q:'ハイ',a:'ロー',d:['ニュートラル','ロング','ワイド']},{q:'ビギナー',a:'エキスパート',d:['プレイヤー','マネージャー','パートナー']},{q:'ストレート',a:'カーブ',d:['シュート','スライダー','フォーク']},{q:'アタック',a:'ディフェンス',d:['ガード','ブロック','リターン']},{q:'オリジナル',a:'コピー',d:['フェイク','カバー','レプリカ']},{q:'フロント',a:'バック',d:['センター','サイド','トップ']},{q:'エントリー',a:'イグジット',d:['リタイア','エディット','リセット']},{q:'ベスト',a:'ワースト',d:['ラスト','コスト','テスト']},{q:'ボトム',a:'トップ',d:['アップ','ピーク','ハイ']},{q:'スタート',a:'ゴール',d:['パス','エントリー','ストップ']},{q:'シンクロ',a:'アシンクロ',d:['ユニクロ','ユニゾン','コブクロ']},{q:'オーガニック',a:'ケミカル',d:['マジカル','フィジカル','テクニカル']},{q:'コンサバ',a:'プログレ',d:['アグレッシブ','カジュアル','モード']},{q:'ワイド',a:'ナロー',d:['スリム','タイト','ショート']},{q:'フィクション',a:'ノンフィクション',d:['ドキュメント','リアル','ファクト']},{q:'アップ',a:'ダウン',d:['オフ','アウト','バック']},{q:'オープン',a:'クローズ',d:['ロック','シール','エンド']},{q:'セーフ',a:'アウト',d:['ファウル','エラー','ストライク']},{q:'ピーク',a:'ボトム',d:['フィニッシュ','ラスト','エンド']},{q:'セントラル',a:'ペリフェラル',d:['アウトラル','シェル','カバー']},{q:'アウェー',a:'ホーム',d:['ハウス','ルーム','コート']},{q:'シングル',a:'ダブル',d:['ペア','コンビ','ユニット']},{q:'ショート',a:'ロング',d:['ワイド','トール','ラージ']},{q:'プロ',a:'アマ',d:['マスター','ルーキー','ファン']},{q:'ホワイト',a:'ブラック',d:['ブルー','レッド','グレー']},{q:'プッシュ',a:'プル',d:['プレス','タップ','スライド']},{q:'フロントエンド',a:'バックエンド',d:['サーバーサイド','クライアント','インフラ']}
     ]
 };
+        // ==========================================
+        // 2. GAS設定
+        // ==========================================
+        const GAS_URL = 'https://script.google.com/macros/s/AKfycbzwY3r-LT1-7NuvPmYS6xgj7ajOpbS1f7At41CWJUWbAvNJ1u2D0eElQfrWd3g_ywVKgA/exec';
 
-        // --- 以降、ロジック部分は変更なし ---
+        // ==========================================
+        // 3. ステージ設定
+        // ==========================================
+        const STAGES = [
+            { id: 'elementary', label: '初級', color: 'bg-emerald-500', count: 15 },
+            { id: 'intermediate', label: '中級', color: 'bg-blue-500', count: 15 },
+            { id: 'advanced', label: '上級', color: 'bg-purple-500', count: 15 },
+            { id: 'insane', label: '超人', color: 'bg-rose-500', count: 15 }
+        ];
+
+        // ==========================================
+        // 4. ゲームロジック
+        // ==========================================
+        let gameMode = '';
+        let currentVersion = 'new';
+        let playerName = '';
         let currentQuestions = [];
         let currentQuestionIndex = 0;
-        let totalScore = 0;
-        let startTime;
-        let gameMode = 'stage'; 
-        let selectedVersion = 'new';
+        let score = 0;
         let isMuted = false;
-        const GAS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbzO_9v3H5Yv6vS-8p6V5P5v8z-8v8v8v8v8v8v/exec'; // 適宜書き換え
+        let questionStartTime = 0; 
+
+        function selectMode(mode) {
+            gameMode = mode;
+            document.getElementById('title-screen').classList.add('hidden');
+            document.getElementById(`instruction-screen-${mode}`).classList.remove('hidden');
+        }
+
+        function showVersionSelect() {
+            // 両方の説明画面を隠してバージョン選択へ
+            document.getElementById('instruction-screen-stage').classList.add('hidden');
+            document.getElementById('instruction-screen-endless').classList.add('hidden');
+            document.getElementById('version-select-screen').classList.remove('hidden');
+        }
+
+        function setVersion(ver) {
+            currentVersion = ver;
+            document.getElementById('version-select-screen').classList.add('hidden');
+            document.getElementById('nickname-screen').classList.remove('hidden');
+        }
+
+        function backToInstruction() {
+            document.getElementById('version-select-screen').classList.add('hidden');
+            document.getElementById(`instruction-screen-${gameMode}`).classList.remove('hidden');
+        }
+
+        function initialStart() {
+            const input = document.getElementById('player-name').value.trim();
+            playerName = input || '無名の戦士';
+            document.getElementById('nickname-screen').classList.add('hidden');
+            document.getElementById('game-screen').classList.remove('hidden');
+            
+            const source = currentVersion === 'new' ? DATA_NEW : DATA_OLD;
+            if (gameMode === 'stage') {
+                currentQuestions = STAGES.flatMap(s => shuffle(source[s.id] || []).slice(0, s.count));
+            } else {
+                currentQuestions = shuffle(Object.values(source).flat());
+            }
+            
+            updateBGM();
+            showQuestion();
+        }
+
+        function showQuestion() {
+            if (currentQuestionIndex >= currentQuestions.length) {
+                endGame(true);
+                return;
+            }
+
+            const qData = currentQuestions[currentQuestionIndex];
+            const badge = document.getElementById('level-badge');
+            
+            if (gameMode === 'stage') {
+                const stageIdx = Math.floor(currentQuestionIndex / 15);
+                const stage = STAGES[stageIdx];
+                if (stage) {
+                    badge.innerText = `${stage.label} ${currentQuestionIndex % 15 + 1}/15`;
+                    badge.className = `px-4 py-1.5 text-white text-xs rounded-full font-bold ${stage.color}`;
+                }
+            } else {
+                badge.innerText = `ENDLESS ${currentQuestionIndex + 1}`;
+                badge.className = `px-4 py-1.5 text-white text-xs rounded-full font-bold bg-slate-700`;
+            }
+
+            document.getElementById('question-word').innerText = qData.q;
+            document.getElementById('progress-bar').style.width = `${(currentQuestionIndex / currentQuestions.length) * 100}%`;
+
+            const choices = shuffle([qData.a, ...qData.d]);
+            const grid = document.getElementById('choices-grid');
+            grid.innerHTML = '';
+            
+            questionStartTime = Date.now();
+
+            choices.forEach(c => {
+                const btn = document.createElement('button');
+                btn.className = 'choice-btn w-full';
+                btn.innerText = c;
+                btn.onclick = () => checkAnswer(c, qData.a);
+                grid.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selected, correct) {
+            const solveTime = (Date.now() - questionStartTime) / 1000;
+
+            if (selected === correct) {
+                playSFX('sfx-correct');
+                
+                let points = 0;
+                let rating = "";
+                let colorClass = "";
+
+                if (solveTime < 1.2) {
+                    points = 1500;
+                    rating = "EXCELLENT!!";
+                    colorClass = "text-yellow-300";
+                } else if (solveTime < 2.5) {
+                    points = 1200;
+                    rating = "GREAT!";
+                    colorClass = "text-emerald-300";
+                } else {
+                    points = 1000;
+                    rating = "GOOD";
+                    colorClass = "text-white";
+                }
+
+                score += points;
+                document.getElementById('total-score').innerText = score.toLocaleString();
+                
+                showFeedback(points, rating, colorClass);
+
+                currentQuestionIndex++;
+                updateBGM();
+                setTimeout(showQuestion, 600);
+            } else {
+                playSFX('sfx-wrong');
+                endGame(false);
+            }
+        }
+
+        function showFeedback(points, rating, colorClass) {
+    const layer = document.getElementById('feedback-layer');
+    if (!layer) return;
+    
+    const el = document.createElement('div');
+    // pointer-events-none を追加して、クリックを透過させる
+    el.className = `absolute inset-0 flex items-center justify-center pointer-events-none z-50`;
+    
+    el.innerHTML = `
+        <div class="bg-slate-900/90 border-2 border-emerald-500 rounded-2xl px-6 py-4 shadow-[0_0_20px_rgba(52,211,153,0.4)] flex flex-col items-center min-w-[160px] fade-out-up">
+            <div class="text-3xl font-black ${colorClass} drop-shadow-md mb-1 italic tracking-wider">${rating}</div>
+            <div class="text-xl font-bold text-white">+${points.toLocaleString()}</div>
+        </div>
+    `;
+    layer.appendChild(el);
+    setTimeout(() => el.remove(), 850);
+}
+
+        async function endGame(isClear) {
+            const title = generateTitle();
+            
+            document.getElementById('overlay').classList.remove('hidden');
+            const icon = document.getElementById('overlay-icon');
+            const msg = document.getElementById('overlay-message');
+            const review = document.getElementById('review-box');
+            
+            if (isClear) {
+                icon.innerText = '🏆';
+                msg.innerText = 'ALL CLEAR!';
+                playSFX('bgm-ending');
+            } else {
+                icon.innerText = '💀';
+                msg.innerText = 'GAME OVER';
+                review.classList.remove('hidden');
+                const lastQ = currentQuestions[currentQuestionIndex];
+                if (lastQ) {
+                    document.getElementById('rev-q').innerText = lastQ.q;
+                    document.getElementById('rev-a').innerText = lastQ.a;
+                }
+            }
+
+            document.getElementById('score-report').innerHTML = `
+                <div class="text-slate-400 text-xs mb-1 uppercase tracking-widest">Player</div>
+                <div class="text-white font-black text-xl mb-4">${playerName}</div>
+                <div class="text-slate-400 text-xs mb-1 uppercase tracking-widest">Title</div>
+                <div class="text-emerald-400 font-black text-lg mb-4">『${title}』</div>
+                <div class="text-slate-400 text-xs mb-1 uppercase tracking-widest">Final Score</div>
+                <div class="text-yellow-400 font-black text-4xl">${score.toLocaleString()}</div>
+            `;
+
+            document.getElementById('ranking-list').innerHTML = '<div class="text-center py-8 text-slate-500 animate-pulse text-xs">ランキング更新中...</div>';
+            await sendScore(title);
+        }
+
+        function generateTitle() {
+            let rank = 'E';
+            if (score >= 50000) rank = 'A';
+            else if (score >= 30000) rank = 'B';
+            else if (score >= 15000) rank = 'C';
+            else if (score >= 5000) rank = 'D';
+
+            const adjList = ADJECTIVES[rank] || ['普通の'];
+            const nounList = NOUNS[rank] || ['挑戦者'];
+            const adj = adjList[Math.floor(Math.random() * adjList.length)];
+            const noun = nounList[Math.floor(Math.random() * nounList.length)];
+            return adj + noun;
+        }
+
+       async function sendScore(title) {
+    try {
+        const params = new URLSearchParams({
+            action: 'save',
+            accessKey: '03162017Rfv',
+            name: playerName,
+            score: score,
+            title: title,
+            mode: gameMode,
+            version: currentVersion
+        });
+
+        const res = await fetch(`${GAS_URL}?${params.toString()}`);
+        const data = await res.json();
+        
+        const list = document.getElementById('ranking-list');
+        
+        if (data && Array.isArray(data)) {
+            list.innerHTML = data.map((r, i) => `
+                <div class="rank-row flex items-center p-3 ${r.name === playerName && r.score === score ? 'bg-emerald-500/20' : ''}">
+                    <div class="w-8 font-black text-slate-500">${i+1}</div>
+                    <div class="flex-grow">
+                        <div class="text-white font-bold text-sm">${r.name}</div>
+                        <div class="text-[10px] text-slate-400">${r.title || '無名の戦士'}</div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-emerald-400 font-black text-sm">${r.score.toLocaleString()}</div>
+                    </div>
+                </div>
+            `).join('');
+        } else {
+            list.innerHTML = '<div class="text-center py-8 text-slate-500 text-xs">データがありません</div>';
+        }
+    } catch (e) {
+        console.error('Ranking Error:', e);
+        document.getElementById('ranking-list').innerHTML = '<div class="text-center py-8 text-rose-400 text-xs">通信に失敗しました</div>';
+    }
+}
+
+        function shuffle(array) {
+            const a = [...array];
+            for (let i = a.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [a[i], a[j]] = [a[j], a[i]];
+            }
+            return a;
+        }
 
         function toggleMute() {
             isMuted = !isMuted;
@@ -327,269 +570,11 @@ const DATA_OLD = {
             }
             ["bgm-stage1", "bgm-stage2", "bgm-stage3", "bgm-stage4", "bgm-endless", "bgm-ending"].forEach(id => {
                 const el = document.getElementById(id);
-                if (el) {
-                    if (id === tid) { if(el.paused) el.play().catch(()=>{}); }
-                    else { el.pause(); el.currentTime = 0; }
+                if(el) {
+                    if(id === tid) el.play().catch(()=>{}); else el.pause();
                 }
             });
         }
-
-        function selectMode(mode) {
-            gameMode = mode;
-            document.getElementById('title-screen').classList.add('hidden');
-            document.getElementById(`instruction-screen-${mode}`).classList.remove('hidden');
-        }
-
-        function showVersionSelect() {
-            document.getElementById('instruction-screen-stage').classList.add('hidden');
-            document.getElementById('instruction-screen-endless').classList.add('hidden');
-            document.getElementById('version-select-screen').classList.remove('hidden');
-        }
-
-        function backToInstruction() {
-            document.getElementById('version-select-screen').classList.add('hidden');
-            document.getElementById(`instruction-screen-${gameMode}`).classList.remove('hidden');
-        }
-
-        function setVersion(ver) {
-            selectedVersion = ver;
-            document.getElementById('version-select-screen').classList.add('hidden');
-            const savedName = localStorage.getItem('p-name');
-            if (savedName) {
-                document.getElementById('player-name').value = savedName;
-                initialStart();
-            } else {
-                document.getElementById('nickname-screen').classList.remove('hidden');
-            }
-        }
-
-        function initialStart() {
-            const name = document.getElementById('player-name').value.trim() || '名無し';
-            localStorage.setItem('p-name', name);
-            document.getElementById('nickname-screen').classList.add('hidden');
-            startGame();
-        }
-
-        function startGame() {
-            const D = (selectedVersion === 'new') ? DATA_NEW : DATA_OLD;
-            if (gameMode === 'stage') {
-                currentQuestions = [
-                    ...shuffle([...D.elementary]).slice(0, 15),
-                    ...shuffle([...D.intermediate]).slice(0, 15),
-                    ...shuffle([...D.advanced]).slice(0, 15),
-                    ...shuffle([...D.insane]).slice(0, 15)
-                ];
-            } else {
-                const all = [...D.elementary, ...D.intermediate, ...D.advanced, ...D.insane];
-                currentQuestions = shuffle(all).slice(0, 200);
-            }
-
-            currentQuestionIndex = 0;
-            totalScore = 0;
-            document.getElementById('total-score').textContent = '0';
-            document.getElementById('game-screen').classList.remove('hidden');
-            updateBGM();
-            showQuestion();
-        }
-
-        function showQuestion() {
-            if (currentQuestionIndex >= currentQuestions.length) {
-                return endGame(true);
-            }
-
-            updateBGM();
-            const q = currentQuestions[currentQuestionIndex];
-            const wordBox = document.getElementById('question-word');
-            wordBox.textContent = q.q;
-            
-            // アニメーションリセット
-            wordBox.parentElement.style.animation = 'none';
-            wordBox.parentElement.offsetHeight;
-            wordBox.parentElement.style.animation = 'fadeIn 0.4s ease-out';
-
-            const choices = shuffle([q.a, ...q.d]);
-            const grid = document.getElementById('choices-grid');
-            grid.innerHTML = '';
-            
-            choices.forEach(c => {
-                const btn = document.createElement('button');
-                btn.className = 'choice-btn py-6 text-2xl font-black rounded-2xl shadow-lg interactive-btn';
-                btn.textContent = c;
-                btn.onclick = () => checkAnswer(c, btn);
-                grid.appendChild(btn);
-            });
-
-            const progress = (currentQuestionIndex / currentQuestions.length) * 100;
-            document.getElementById('progress-bar').style.width = `${progress}%`;
-            
-            const badge = document.getElementById('level-badge');
-            if (gameMode === 'endless') {
-                badge.textContent = `ENDLESS ${currentQuestionIndex + 1}/200`;
-                badge.className = 'px-4 py-1.5 text-white text-xs rounded-full font-bold bg-blue-600';
-            } else {
-                const lv = Math.floor(currentQuestionIndex / 15) + 1;
-                const labels = ['初級', '中級', '上級', '極限'];
-                const colors = ['bg-emerald-500', 'bg-blue-500', 'bg-purple-500', 'bg-rose-600'];
-                badge.textContent = `STAGE ${lv} - ${labels[lv-1]}`;
-                badge.className = `px-4 py-1.5 text-white text-xs rounded-full font-bold ${colors[lv-1]}`;
-            }
-
-            startTime = Date.now();
-        }
-
-        function checkAnswer(choice, btn) {
-            const q = currentQuestions[currentQuestionIndex];
-            const timeTaken = (Date.now() - startTime) / 1000;
-
-            if (choice === q.a) {
-                playSFX('sfx-correct');
-                const bonus = Math.max(0, Math.floor((3.0 - timeTaken) * 100));
-                const base = 100;
-                const points = base + bonus;
-                totalScore += points;
-                document.getElementById('total-score').textContent = totalScore.toLocaleString();
-                
-                showComboEffect(btn, `+${points}`);
-
-                currentQuestionIndex++;
-                setTimeout(showQuestion, 300);
-            } else {
-                playSFX('sfx-wrong');
-                btn.classList.add('bg-rose-600', 'border-rose-800');
-                btn.style.background = 'linear-gradient(145deg, #e11d48, #9f1239) !important';
-                endGame(false);
-            }
-        }
-
-        function showComboEffect(targetBtn, text) {
-            const rect = targetBtn.getBoundingClientRect();
-            const effect = document.createElement('div');
-            effect.className = 'absolute z-[100] text-3xl font-black text-yellow-400 pointer-events-none fade-out-up';
-            effect.style.left = `${rect.left + rect.width/2}px`;
-            effect.style.top = `${rect.top}px`;
-            effect.textContent = text;
-            document.getElementById('feedback-layer').appendChild(effect);
-            setTimeout(() => effect.remove(), 800);
-        }
-
-        function endGame(isClear) {
-            const D = (selectedVersion === 'new') ? DATA_NEW : DATA_OLD;
-            if (!isMuted) {
-                ["bgm-stage1", "bgm-stage2", "bgm-stage3", "bgm-stage4", "bgm-endless"].forEach(id => {
-                    const el = document.getElementById(id);
-                    if (el) el.pause();
-                });
-                const endBgm = document.getElementById('bgm-ending');
-                if (endBgm) endBgm.play().catch(()=>{});
-            }
-
-            const overlay = document.getElementById('overlay');
-            const icon = document.getElementById('overlay-icon');
-            const msg = document.getElementById('overlay-message');
-            const review = document.getElementById('review-box');
-            
-            overlay.classList.remove('hidden');
-
-            if (isClear) {
-                icon.textContent = '👑';
-                msg.textContent = (gameMode === 'endless') ? '全問制覇！' : '完全踏破！';
-                msg.className = 'text-4xl font-black text-yellow-400 mb-4';
-                review.classList.add('hidden');
-            } else {
-                icon.textContent = '☠️';
-                msg.textContent = '修業不足！';
-                msg.className = 'text-4xl font-black text-rose-500 mb-4';
-                
-                const q = currentQuestions[currentQuestionIndex];
-                document.getElementById('rev-q').textContent = q.q;
-                document.getElementById('rev-a').textContent = q.a;
-                review.classList.remove('hidden');
-            }
-
-            const rankInfo = getRankInfo(totalScore);
-            document.getElementById('score-report').innerHTML = `
-                <div class="text-slate-400 text-xs font-bold uppercase tracking-widest mb-1">Final Score</div>
-                <div class="text-5xl font-black text-white mb-6">${totalScore.toLocaleString()}</div>
-                <div class="text-slate-400 text-xs font-bold uppercase tracking-widest mb-1">称号</div>
-                <div class="text-xl font-bold text-emerald-400">${rankInfo.adj}${rankInfo.noun}</div>
-            `;
-
-            submitScore(totalScore);
-        }
-
-        function getRankInfo(score) {
-            let grade = 'E';
-            if (score >= 10000) grade = 'A';
-            else if (score >= 7000) grade = 'B';
-            else if (score >= 4000) grade = 'C';
-            else if (score >= 1000) grade = 'D';
-
-            const adjList = ADJECTIVES[grade];
-            const nounList = NOUNS[grade];
-            return {
-                adj: adjList[Math.floor(Math.random() * adjList.length)] || "見習いの",
-                noun: nounList[Math.floor(Math.random() * nounList.length)] || "挑戦者"
-            };
-        }
-
-        function shuffle(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-            return array;
-        }
-
-        async function submitScore(score) {
-            const name = localStorage.getItem('p-name') || '名無し';
-            const rankingList = document.getElementById('ranking-list');
-            rankingList.innerHTML = '<div class="p-4 text-center text-slate-500">ランキング読み込み中...</div>';
-
-            try {
-                const response = await fetch(GAS_ENDPOINT, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, score, mode: gameMode, version: selectedVersion })
-                });
-                
-                setTimeout(fetchRanking, 1500); 
-            } catch (e) {
-                rankingList.innerHTML = '<div class="p-4 text-center text-rose-400">通信エラー</div>';
-            }
-        }
-
-        async function fetchRanking() {
-            try {
-                const response = await fetch(`${GAS_ENDPOINT}?mode=${gameMode}&version=${selectedVersion}`);
-                const data = await response.json();
-                const rankingList = document.getElementById('ranking-list');
-                rankingList.innerHTML = '';
-
-                data.forEach((entry, i) => {
-                    const row = document.createElement('div');
-                    row.className = 'rank-row flex items-center justify-between p-4';
-                    const isTop3 = i < 3;
-                    const rankColor = i === 0 ? 'text-yellow-400' : i === 1 ? 'text-slate-300' : i === 2 ? 'text-amber-600' : 'text-slate-500';
-                    
-                    row.innerHTML = `
-                        <div class="flex items-center gap-4">
-                            <span class="w-6 font-black ${rankColor}">${i + 1}</span>
-                            <span class="font-bold text-slate-200">${entry.name}</span>
-                        </div>
-                        <span class="font-mono font-bold text-emerald-400">${entry.score.toLocaleString()}</span>
-                    `;
-                    rankingList.appendChild(row);
-                });
-            } catch (e) {
-                console.error('Ranking fetch failed');
-            }
-        }
-
-        // 旧問題データ（予備：指示がない限り空にする場合はここも空にしてください）
-        const DATA_OLD = {
-            elementary: [], intermediate: [], advanced: [], insane: []
-        };
     </script>
 </body>
 </html>
