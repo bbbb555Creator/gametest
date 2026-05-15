@@ -112,7 +112,7 @@
 <body>
     <div id="game-container" class="w-full relative overflow-hidden">
         <div class="absolute top-4 left-4 z-50 text-[10px] font-mono text-slate-500 tracking-widest pointer-events-none">
-            VER 3.1 infomation
+            VER 3.2 infomation
         </div>
 
         <div id="title-screen" class="flex-grow flex flex-col items-center justify-between text-center py-10 px-8 fade-in relative z-10">
@@ -585,9 +585,9 @@ function displayRanking(data) {
             }
 
             document.getElementById('score-report').innerHTML = `
-                <div class="text-slate-400 text-xs mb-1 uppercase tracking-widest">Player</div>
+                <div class="text-slate-400 text-xs mb-1 uppercase tracking-widest">プレイヤー</div>
                 <div class="text-white font-black text-xl mb-4">${playerName}</div>
-                <div class="text-slate-400 text-xs mb-1 uppercase tracking-widest">Title</div>
+                <div class="text-slate-400 text-xs mb-1 uppercase tracking-widest">獲得称号</div>
                 <div class="text-emerald-400 font-black text-lg mb-4">『${title}』</div>
                 <div class="text-slate-400 text-xs mb-1 uppercase tracking-widest">Final Score</div>
                 <div class="text-yellow-400 font-black text-4xl">${score.toLocaleString()}</div>
