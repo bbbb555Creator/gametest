@@ -112,7 +112,7 @@
 <body>
     <div id="game-container" class="w-full relative overflow-hidden">
         <div class="absolute top-4 left-4 z-50 text-[10px] font-mono text-slate-500 tracking-widest pointer-events-none">
-            VER 3.0 infomation
+            VER 3.1 infomation
         </div>
 
         <div id="title-screen" class="flex-grow flex flex-col items-center justify-between text-center py-10 px-8 fade-in relative z-10">
@@ -552,17 +552,22 @@ function displayRanking(data) {
 
             const title = generateTitle();
             
-            document.getElementById('overlay').classList.remove('hidden');
+            const ov = document.getElementById('overlay');
+            ov.classList.remove('hidden');
             const icon = document.getElementById('overlay-icon');
             const msg = document.getElementById('overlay-message');
             const review = document.getElementById('review-box');
+            const btn = document.getElementById('action-btn');
             
             if (isClear) {
                 icon.innerText = '🏆';
                 msg.innerText = 'ALL CLEAR!';
-                // 【完全制覇時のみ】エンディング曲を再生
                 const eb = document.getElementById('bgm-ending');
                 if (eb && !isMuted) eb.play().catch(()=>{});
+                
+                btn.innerText = "タイトルに戻る";
+                btn.className = "w-full py-6 bg-emerald-600 rounded-3xl font-black text-2xl shadow-xl active:scale-95 transition-all text-white";
+                btn.onclick = () => location.reload(); // 完全にリセット
             } else {
                 icon.innerText = '💀';
                 msg.innerText = 'GAME OVER';
@@ -572,7 +577,11 @@ function displayRanking(data) {
                     document.getElementById('rev-q').innerText = lastQ.q;
                     document.getElementById('rev-a').innerText = lastQ.a;
                 }
-                // 通常のゲームオーバー時は何もしない（無音）
+                
+                // ゲームオーバー時はタイトルに戻るボタンにする
+                btn.innerText = "タイトルに戻る";
+                btn.className = "w-full py-6 bg-slate-700 rounded-3xl font-black text-2xl shadow-xl active:scale-95 transition-all text-white";
+                btn.onclick = () => location.reload(); // ページをリロードして初期化
             }
 
             document.getElementById('score-report').innerHTML = `
