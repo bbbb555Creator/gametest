@@ -115,7 +115,7 @@
 <body>
     <div id="game-container" class="w-full relative overflow-hidden">
         <div class="absolute top-4 left-4 z-50 text-[10px] font-mono text-slate-500 tracking-widest pointer-events-none">
-            VER 3.5
+            VER 3.6
         </div>
 
         <div id="title-screen" class="flex-grow flex flex-col items-center justify-between text-center py-10 px-8 fade-in relative z-10">
@@ -432,9 +432,15 @@ const DATA_OLD = {
         document.getElementById(`instruction-screen-${mode}`).classList.remove('hidden');
     }
 
-    function showVersionSelect() {
+   function showVersionSelect() {
         document.getElementById(`instruction-screen-${gameMode}`).classList.add('hidden');
-        document.getElementById('version-select-screen').classList.remove('hidden');
+        
+        // デイリーモードのときは、vol選択画面をスキップして直接名前入力画面へ！
+        if (gameMode === 'daily') {
+            document.getElementById('nickname-screen').classList.remove('hidden');
+        } else {
+            document.getElementById('version-select-screen').classList.remove('hidden');
+        }
     }
 
     function backToInstruction() {
