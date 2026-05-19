@@ -115,7 +115,7 @@
 <body>
     <div id="game-container" class="w-full relative overflow-hidden">
         <div class="absolute top-4 left-4 z-50 text-[10px] font-mono text-slate-500 tracking-widest pointer-events-none">
-            VER 3.6
+            VER 3.7
         </div>
 
         <div id="title-screen" class="flex-grow flex flex-col items-center justify-between text-center py-10 px-8 fade-in relative z-10">
@@ -755,17 +755,41 @@ const DATA_OLD = {
         // ランキング出し分けの安全な処理
         const rankingList = document.getElementById('ranking-list');
         if (rankingList) {
-            if (gameMode === 'daily') {
-                if (isDailyPractice) {
-                    rankingList.innerHTML = '<div class="text-center py-8 text-amber-400 font-bold text-xs">練習モードのためランキングは送信されません</div>';
-                } else {
-                    localStorage.setItem('lastPlayedDailyDate', getTodayString());
-                    rankingList.innerHTML = '<div class="text-center py-8 text-slate-500 animate-pulse text-xs">ランキング更新中...</div>';
-                    await sendScore(title);
-                }
+            if (gameMode === 'daily' && isDailyPractice) {
+                // 練習モードの時は、スコア送信はせず、取得だけ行う用の新しい関数を呼ぶ
+                rankingList.innerHTML = '<div class="text-center py-8 text-slate-500 animate-pulse text-xs">ランキング読み込み中...</div>';
+                await fetchRankingOnly();
             } else {
+                // 初回デイリーや通常モードは今まで通りスコアを送信してランキング更新
+                if (gameMode === 'daily') {
+                    localStorage.setItem('lastPlayedDailyDate', getTodayString());
+                }
                 rankingList.innerHTML = '<div class="text-center py-8 text-slate-500 animate-pulse text-xs">ランキング更新中...</div>';
                 await sendScore(title);
+            }
+        }
+    // 練習モード用：スコアを保存せずにランキングデータだけを取得して表示する関数
+    async function fetchRankingOnly() {
+        try {
+            const params = new URLSearchParams({
+                action: 'get', // 保存(save)ではなく取得(get)を指示
+                accessKey: '03162017Rfv',
+                mode: gameMode,
+                version: currentVersion
+            });
+            
+            const url = `${GAS_URL}?${params.toString()}&_=${Date.now()}`;
+            
+            const res = await fetch(url);
+            const data = await res.json();
+            
+            // 既存の表示関数をそのまま使ってランキングを描画
+            displayRanking(data); 
+        } catch (e) {
+            console.error('ランキング取得エラー:', e);
+            const rankingList = document.getElementById('ranking-list');
+            if (rankingList) {
+                rankingList.innerHTML = '<div class="text-center py-8 text-slate-500 text-xs">ランキングの取得に失敗しました</div>';
             }
         }
     }
