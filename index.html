@@ -115,7 +115,7 @@
 <body>
     <div id="game-container" class="w-full relative overflow-hidden">
         <div class="absolute top-4 left-4 z-50 text-[10px] font-mono text-slate-500 tracking-widest pointer-events-none">
-            VER 3.4　dairy
+            VER 3.5
         </div>
 
         <div id="title-screen" class="flex-grow flex flex-col items-center justify-between text-center py-10 px-8 fade-in relative z-10">
@@ -428,12 +428,8 @@ const DATA_OLD = {
         gameMode = mode;
         document.getElementById('title-screen').classList.add('hidden');
         
-        // ★デイリーモード選択時のみ、vol.1と2の選択画面を飛ばして名前入力画面へいく
-        if (mode === 'daily') {
-            document.getElementById('nickname-screen').classList.remove('hidden');
-        } else {
-            document.getElementById(`instruction-screen-${mode}`).classList.remove('hidden');
-        }
+        // デイリーも含めて、まずはそれぞれの遊び方説明画面（instruction-screen-○○）を表示する
+        document.getElementById(`instruction-screen-${mode}`).classList.remove('hidden');
     }
 
     function showVersionSelect() {
@@ -912,4 +908,3 @@ const DATA_OLD = {
 </script>
 </body>
 </html>
-
