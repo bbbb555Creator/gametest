@@ -115,7 +115,7 @@
 <body>
     <div id="game-container" class="w-full relative overflow-hidden">
         <div class="absolute top-4 left-4 z-50 text-[10px] font-mono text-slate-500 tracking-widest pointer-events-none">
-            VER 3.8
+            VER 3.9 bgm
         </div>
 
         <div id="title-screen" class="flex-grow flex flex-col items-center justify-between text-center py-10 px-8 fade-in relative z-10">
@@ -287,6 +287,7 @@
     <audio id="bgm-stage3" loop preload="auto"><source src="3.mp3" type="audio/mpeg"></audio>
     <audio id="bgm-stage4" loop preload="auto"><source src="4.mp3" type="audio/mpeg"></audio>
     <audio id="bgm-endless" loop preload="auto"><source src="3.mp3" type="audio/mpeg"></audio>
+    <audio id="bgm-daily" loop preload="auto"><source src="daily_bgm.mp3" type="audio/mpeg"></audio>
     <audio id="bgm-ending" loop preload="auto"><source src="end.mp3" type="audio/mpeg"></audio>
     <audio id="sfx-correct" preload="auto"><source src="maru.mp3" type="audio/mpeg"></audio>
     <audio id="sfx-wrong" preload="auto"><source src="batu.mp3" type="audio/mpeg"></audio>
@@ -651,9 +652,9 @@ const DATA_OLD = {
         listContainer.innerHTML = html;
     }
 
-    async function endGame(isClear) {
-        // すべてのBGMを停止
-        ["bgm-stage1", "bgm-stage2", "bgm-stage3", "bgm-stage4", "bgm-endless", "bgm-ending"].forEach(id => {
+   async function endGame(isClear) {
+        // すべてのBGMを停止（bgm-dailyも追加！）
+        ["bgm-stage1", "bgm-stage2", "bgm-stage3", "bgm-stage4", "bgm-endless", "bgm-daily", "bgm-ending"].forEach(id => {
             const el = document.getElementById(id);
             if (el) {
                 el.pause();
@@ -825,7 +826,8 @@ const DATA_OLD = {
         document.getElementById("title-volume-on").classList.toggle('hidden', isMuted);
         document.getElementById("title-volume-off").classList.toggle('hidden', !isMuted);
         if (isMuted) {
-            ["bgm-stage1", "bgm-stage2", "bgm-stage3", "bgm-stage4", "bgm-endless", "bgm-ending"].forEach(id => {
+            // ミュート時に bgm-daily も止まるように配列に追加
+            ["bgm-stage1", "bgm-stage2", "bgm-stage3", "bgm-stage4", "bgm-endless", "bgm-daily", "bgm-ending"].forEach(id => {
                 const el = document.getElementById(id);
                 if (el) el.pause();
             });
@@ -843,20 +845,34 @@ const DATA_OLD = {
 
     function updateBGM() {
         if (isMuted) return;
-        let tid = (gameMode === 'endless' || gameMode === 'daily') ? "bgm-endless" : "bgm-stage1";
+        
+        // デイリーなら bgm-daily、エンドレスなら bgm-endless、それ以外（ステージ）なら bgm-stage1 を初期値にする
+        let tid = "bgm-stage1";
+        if (gameMode === 'endless') {
+            tid = "bgm-endless";
+        } else if (gameMode === 'daily') {
+            tid = "bgm-daily";
+        }
+        
         if (gameMode === 'stage') {
             const level = Math.floor(currentQuestionIndex / 15) + 1;
             if(level === 2) tid = "bgm-stage2";
             if(level === 3) tid = "bgm-stage3";
             if(level >= 4) tid = "bgm-stage4";
         }
-        ["bgm-stage1", "bgm-stage2", "bgm-stage3", "bgm-stage4", "bgm-endless", "bgm-ending"].forEach(id => {
-            const el = document.getElementById(id);
-            if(el) {
-                if(id === tid) el.play().catch(()=>{}); else el.pause();
-            }
-        });
+        
+        // ループ処理の配列にも "bgm-daily" をしっかり含めるよ
+       ["bgm-stage1", "bgm-stage2", "bgm-stage3", "bgm-stage4", "bgm-endless", "bgm-daily", "bgm-ending"].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) {
+        if(id === tid) {
+            // すでに再生中なら重ねて play() しない！
+            if (el.paused) el.play().catch(()=>{});
+        } else {
+            el.pause();
+        }
     }
+});
 
     function showStageClearOverlay(stageNum) {
         const ov = document.getElementById('overlay');
