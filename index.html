@@ -115,7 +115,7 @@
 <body>
     <div id="game-container" class="w-full relative overflow-hidden">
         <div class="absolute top-4 left-4 z-50 text-[10px] font-mono text-slate-500 tracking-widest pointer-events-none">
-            VER 3.9.1　bgm
+            VER 3.9.2　ranking
         </div>
 
         <div id="title-screen" class="flex-grow flex flex-col items-center justify-between text-center py-10 px-8 fade-in relative z-10">
@@ -597,7 +597,14 @@ const DATA_OLD = {
         setTimeout(() => el.remove(), 850);
     }
 
+    // ★二重送信を防ぐためのフラグ（関数の外に置いてね）
+    let isSendingScore = false;
+
     async function sendScore(title) {
+        // ★すでに送信中なら、処理を強制終了して2回目の送信を完全にブロック！
+        if (isSendingScore) return;
+        isSendingScore = true; // 送信中フラグをONにする
+
         try {
             const params = new URLSearchParams({
                 action: 'save',
@@ -617,6 +624,9 @@ const DATA_OLD = {
             displayRanking(data); 
         } catch (e) {
             console.error('ランキング保存エラー:', e);
+        } finally {
+            // ★通信が終わったら（成功してもエラーになっても）フラグをOFFに戻す
+            isSendingScore = false;
         }
     }
 
