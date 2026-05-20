@@ -115,7 +115,7 @@
 <body>
     <div id="game-container" class="w-full relative overflow-hidden">
         <div class="absolute top-4 left-4 z-50 text-[10px] font-mono text-slate-500 tracking-widest pointer-events-none">
-            VER 3.9 bgm
+            VER 3.9.1　bgm
         </div>
 
         <div id="title-screen" class="flex-grow flex flex-col items-center justify-between text-center py-10 px-8 fade-in relative z-10">
@@ -862,17 +862,18 @@ const DATA_OLD = {
         }
         
         // ループ処理の配列にも "bgm-daily" をしっかり含めるよ
-       ["bgm-stage1", "bgm-stage2", "bgm-stage3", "bgm-stage4", "bgm-endless", "bgm-daily", "bgm-ending"].forEach(id => {
-    const el = document.getElementById(id);
-    if(el) {
-        if(id === tid) {
-            // すでに再生中なら重ねて play() しない！
-            if (el.paused) el.play().catch(()=>{});
-        } else {
-            el.pause();
-        }
-    }
-});
+        ["bgm-stage1", "bgm-stage2", "bgm-stage3", "bgm-stage4", "bgm-endless", "bgm-daily", "bgm-ending"].forEach(id => {
+            const el = document.getElementById(id);
+            if(el) {
+                if(id === tid) {
+                    // すでに再生中なら重ねて play() しない！
+                    if (el.paused) el.play().catch(()=>{});
+                } else {
+                    el.pause();
+                }
+            }
+        });
+    } // 👈★ここに updateBGM 関数をきっちり終わらせるための閉じカッコを追加！
 
     function showStageClearOverlay(stageNum) {
         const ov = document.getElementById('overlay');
