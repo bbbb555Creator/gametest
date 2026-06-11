@@ -10,14 +10,18 @@
     <div class="max-w-md mx-auto bg-white rounded-3xl shadow-lg p-6">
         <h1 class="text-2xl font-bold text-orange-800 mb-6 text-center">🍞 Bunのパン工房</h1>
 
-        <label class="block text-sm font-bold text-orange-900 mb-3">レシピを選ぶ</label>
-        <div id="recipeCards" class="flex overflow-x-auto space-x-4 pb-6 mb-6 snap-x">
+        <div class="flex items-end gap-2 mb-3">
+            <label class="block text-sm font-bold text-orange-900">レシピを選ぶ</label>
+            <span class="text-[10px] text-orange-500 font-medium">← 横にスワイプ →</span>
+        </div>
+        
+        <div id="recipeCards" class="flex overflow-x-auto space-x-4 pb-4 px-2 mb-6 snap-x">
             <p class="text-orange-500">読み込み中...</p>
         </div>
 
         <div id="recipeImageContainer" class="mb-6 hidden bg-white p-2 rounded-2xl shadow-inner">
-    <img id="recipeImage" src="" alt="レシピ写真(左右にスワイプして選んでね)" class="w-full h-auto max-h-64 object-contain rounded-xl">
-</div>
+            <img id="recipeImage" src="" alt="レシピ写真" class="w-full h-64 object-cover rounded-2xl shadow-md">
+        </div>
 
         <div class="bg-orange-100 p-5 rounded-2xl mb-6">
             <div class="flex justify-between items-center mb-4">
@@ -51,15 +55,14 @@
                     let cleanMenu = String(item.menu).replace(/[\s\u3000]+/g, "").trim();
                     allRecipes[cleanMenu] = item;
 
-                    // カード作成のここを調整
-const card = document.createElement('div');
-// w-32 を w-40 にして少し横幅を広げ、h-20 で高さを固定
-card.className = "flex-shrink-0 w-40 h-20 snap-start cursor-pointer transition-transform hover:scale-105";
-card.innerHTML = `
-    <div class="bg-orange-100 rounded-xl p-2 h-full flex items-center justify-center border-2 border-transparent hover:border-orange-500">
-        <p class="text-xs font-bold text-orange-900 text-center leading-tight break-words">${cleanMenu}</p>
-    </div>
-`;
+                    const card = document.createElement('div');
+                    // my-1 を入れて上下の隙間（縁の切れる防止）を確保
+                    card.className = "flex-shrink-0 w-40 h-20 snap-start cursor-pointer transition-transform hover:scale-105 my-1";
+                    card.innerHTML = `
+                        <div class="bg-orange-100 rounded-xl p-2 h-full flex items-center justify-center border-2 border-transparent hover:border-orange-500 hover:shadow-md">
+                            <p class="text-xs font-bold text-orange-900 text-center leading-tight break-words">${cleanMenu}</p>
+                        </div>
+                    `;
                     card.onclick = () => selectRecipe(cleanMenu);
                     container.appendChild(card);
                 });
@@ -82,17 +85,29 @@ card.innerHTML = `
 
             const imgContainer = document.getElementById('recipeImageContainer');
             const img = document.getElementById('recipeImage');
-            
             if (recipe.image) {
                 img.src = "https://lh3.googleusercontent.com/d/" + recipe.image;
-                // object-coverのままにしておいて、CSSで「画像の中央を見せる」ようにする
-                img.className = "w-full h-64 object-cover rounded-2xl shadow-md"; 
                 imgContainer.classList.remove('hidden');
             } else {
                 imgContainer.classList.add('hidden');
             }
+
+            document.getElementById('targetCount').value = recipe.baseCount;
+            document.getElementById('baseCountDisplay').innerText = recipe.baseCount;
+
+            const procContainer = document.getElementById('procedureList');
+            const procTitle = document.getElementById('procedureTitle');
+            procContainer.innerHTML = '';
             
-            // ...以下略
+            if (recipe.procedures && recipe.procedures.length > 0) {
+                procTitle.classList.remove('hidden');
+                recipe.procedures.forEach(s => {
+                    procContainer.innerHTML += `<h4 class="font-bold text-orange-950 mt-4">【${s.section}】</h4>`;
+                    s.steps.forEach((step, i) => procContainer.innerHTML += `<div class="text-sm"><b>${i+1}.</b> ${step}</div>`);
+                });
+            } else {
+                procTitle.classList.add('hidden');
+            }
             calculate();
         }
 
