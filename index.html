@@ -15,9 +15,9 @@
             <p class="text-orange-500">読み込み中...</p>
         </div>
 
-        <div id="recipeImageContainer" class="mb-6 hidden">
-            <img id="recipeImage" src="" alt="レシピ写真" class="w-full h-auto max-h-48 object-cover rounded-2xl shadow-md">
-        </div>
+        <div id="recipeImageContainer" class="mb-6 hidden bg-white p-2 rounded-2xl shadow-inner">
+    <img id="recipeImage" src="" alt="レシピ写真" class="w-full h-auto max-h-64 object-contain rounded-xl">
+</div>
 
         <div class="bg-orange-100 p-5 rounded-2xl mb-6">
             <div class="flex justify-between items-center mb-4">
@@ -51,13 +51,15 @@
                     let cleanMenu = String(item.menu).replace(/[\s\u3000]+/g, "").trim();
                     allRecipes[cleanMenu] = item;
 
-                    const card = document.createElement('div');
-                    card.className = "flex-shrink-0 w-32 snap-start cursor-pointer transition-transform hover:scale-105";
-                    card.innerHTML = `
-                        <div class="bg-orange-100 rounded-xl p-2 text-center border-2 border-transparent hover:border-orange-500">
-                            <p class="text-xs font-bold text-orange-900 truncate">${cleanMenu}</p>
-                        </div>
-                    `;
+                    // カード作成のここを調整
+const card = document.createElement('div');
+// w-32 を w-40 にして少し横幅を広げ、h-20 で高さを固定
+card.className = "flex-shrink-0 w-40 h-20 snap-start cursor-pointer transition-transform hover:scale-105";
+card.innerHTML = `
+    <div class="bg-orange-100 rounded-xl p-2 h-full flex items-center justify-center border-2 border-transparent hover:border-orange-500">
+        <p class="text-xs font-bold text-orange-900 text-center leading-tight break-words">${cleanMenu}</p>
+    </div>
+`;
                     card.onclick = () => selectRecipe(cleanMenu);
                     container.appendChild(card);
                 });
