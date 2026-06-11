@@ -20,6 +20,9 @@
         </div>
 
         <div class="bg-orange-100 p-5 rounded-2xl mb-6">
+            <div class="flex justify-between items-center mb-4">
+                <span class="text-sm text-orange-800">元レシピの個数: <span id="baseCountDisplay" class="font-bold text-orange-950">0</span></span>
+            </div>
             <label class="block text-sm font-bold text-orange-900 mb-2">作りたい個数</label>
             <input type="number" id="targetCount" value="4" oninput="calculate()" class="w-full p-4 rounded-xl border-2 border-orange-300 text-3xl font-bold text-center text-orange-900 focus:outline-none focus:border-orange-500">
         </div>
@@ -31,7 +34,7 @@
 
     <script>
         let allRecipes = {};
-        let currentRecipeKey = ""; // 今選んでいるレシピを記憶する変数
+        let currentRecipeKey = ""; 
         const GAS_URL = 'https://script.google.com/macros/s/AKfycbxPf6aGtE_j5qRRLuV6tjJ8aMOjaRQfBri3kOsDJ9dmteRgSuQ_7Kerizpi-X79eUaF/exec';
 
         async function fetchRecipes() {
@@ -48,7 +51,6 @@
                     let cleanMenu = String(item.menu).replace(/[\s\u3000]+/g, "").trim();
                     allRecipes[cleanMenu] = item;
 
-                    // カード作成
                     const card = document.createElement('div');
                     card.className = "flex-shrink-0 w-32 snap-start cursor-pointer transition-transform hover:scale-105";
                     card.innerHTML = `
@@ -60,10 +62,10 @@
                     container.appendChild(card);
                 });
                 
-                // 最初の一つを自動選択
                 if (data.length > 0) selectRecipe(String(data[0].menu).replace(/[\s\u3000]+/g, "").trim());
             } catch (e) {
                 console.error(e);
+                document.getElementById('recipeCards').innerHTML = '<p class="text-red-500">読み込み失敗...</p>';
             }
         }
 
@@ -86,18 +88,20 @@
             }
 
             document.getElementById('targetCount').value = recipe.baseCount;
-            document.getElementById('baseCountDisplay')?.innerText = recipe.baseCount;
+            document.getElementById('baseCountDisplay').innerText = recipe.baseCount;
 
             const procContainer = document.getElementById('procedureList');
             const procTitle = document.getElementById('procedureTitle');
             procContainer.innerHTML = '';
-            // (作り方表示のロジックは以前のまま)
+            
             if (recipe.procedures && recipe.procedures.length > 0) {
                 procTitle.classList.remove('hidden');
                 recipe.procedures.forEach(s => {
                     procContainer.innerHTML += `<h4 class="font-bold text-orange-950 mt-4">【${s.section}】</h4>`;
                     s.steps.forEach((step, i) => procContainer.innerHTML += `<div class="text-sm"><b>${i+1}.</b> ${step}</div>`);
                 });
+            } else {
+                procTitle.classList.add('hidden');
             }
             calculate();
         }
@@ -108,13 +112,16 @@
             if (!recipe) return;
             const container = document.getElementById('ingredientList');
             container.innerHTML = '';
-            recipe.ingredients.base.forEach(item => {
-                const amountStr = item.amount.toString();
-                const match = amountStr.match(/([\d\.]+)/);
-                const val = match ? (parseFloat(match[1]) * targetCount) / recipe.baseCount : 0;
-                const display = match ? val.toFixed(1).replace('.0','') + amountStr.replace(match[1], "") : amountStr;
-                container.innerHTML += `<div class="flex justify-between py-1 border-b border-orange-100"><span>${item.name}</span><span class="font-bold">${display}</span></div>`;
-            });
+            
+            if(recipe.ingredients && recipe.ingredients.base) {
+                recipe.ingredients.base.forEach(item => {
+                    const amountStr = item.amount.toString();
+                    const match = amountStr.match(/([\d\.]+)/);
+                    const val = match ? (parseFloat(match[1]) * targetCount) / recipe.baseCount : 0;
+                    const display = match ? val.toFixed(1).replace('.0','') + amountStr.replace(match[1], "") : amountStr;
+                    container.innerHTML += `<div class="flex justify-between py-1 border-b border-orange-100"><span>${item.name}</span><span class="font-bold text-orange-900">${display}</span></div>`;
+                });
+            }
         }
 
         fetchRecipes();
