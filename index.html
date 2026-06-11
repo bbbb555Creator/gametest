@@ -16,7 +16,7 @@
         </div>
 
         <div id="recipeImageContainer" class="mb-6 hidden bg-white p-2 rounded-2xl shadow-inner">
-    <img id="recipeImage" src="" alt="レシピ写真" class="w-full h-auto max-h-64 object-contain rounded-xl">
+    <img id="recipeImage" src="" alt="レシピ写真(左右にスワイプして選んでね)" class="w-full h-auto max-h-64 object-contain rounded-xl">
 </div>
 
         <div class="bg-orange-100 p-5 rounded-2xl mb-6">
@@ -82,29 +82,17 @@ card.innerHTML = `
 
             const imgContainer = document.getElementById('recipeImageContainer');
             const img = document.getElementById('recipeImage');
+            
             if (recipe.image) {
                 img.src = "https://lh3.googleusercontent.com/d/" + recipe.image;
+                // object-coverのままにしておいて、CSSで「画像の中央を見せる」ようにする
+                img.className = "w-full h-64 object-cover rounded-2xl shadow-md"; 
                 imgContainer.classList.remove('hidden');
             } else {
                 imgContainer.classList.add('hidden');
             }
-
-            document.getElementById('targetCount').value = recipe.baseCount;
-            document.getElementById('baseCountDisplay').innerText = recipe.baseCount;
-
-            const procContainer = document.getElementById('procedureList');
-            const procTitle = document.getElementById('procedureTitle');
-            procContainer.innerHTML = '';
             
-            if (recipe.procedures && recipe.procedures.length > 0) {
-                procTitle.classList.remove('hidden');
-                recipe.procedures.forEach(s => {
-                    procContainer.innerHTML += `<h4 class="font-bold text-orange-950 mt-4">【${s.section}】</h4>`;
-                    s.steps.forEach((step, i) => procContainer.innerHTML += `<div class="text-sm"><b>${i+1}.</b> ${step}</div>`);
-                });
-            } else {
-                procTitle.classList.add('hidden');
-            }
+            // ...以下略
             calculate();
         }
 
