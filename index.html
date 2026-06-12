@@ -111,7 +111,12 @@
                 recipe.procedures.forEach(s => {
                     procContainer.innerHTML += `<h4 class="font-bold text-orange-950 mt-4">【${s.section}】</h4>`;
                     s.steps.forEach((step, i) => {
-                        const linkedStep = step.replace(/(\d+)分/g, (match, p1) => {
+                        
+// 修正後（「分」の直後に「割」という文字がない場合のみマッチさせる）:
+const linkedStep = step.replace(/(\d+)分(?![割])/g, (match, p1) => {
+    return `<button onclick="startTimer(${p1})" class="bg-orange-200 hover:bg-orange-300 text-orange-900 px-2 py-0.5 rounded-md font-bold transition underline decoration-orange-400">${match}</button>`;
+});
+
                             return `<button onclick="startTimer(${p1})" class="bg-orange-200 hover:bg-orange-300 text-orange-900 px-2 py-0.5 rounded-md font-bold transition underline decoration-orange-400">${match}</button>`;
                         });
                         procContainer.innerHTML += `<div class="text-sm py-1"><b>${i+1}.</b> ${linkedStep}</div>`;
