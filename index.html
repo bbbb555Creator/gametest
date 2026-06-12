@@ -83,6 +83,7 @@
 
         function selectRecipe(key) {
             currentRecipeKey = key;
+            stopTimer(); // ここで切り替え時にタイマーを止める！
             loadRecipe();
         }
 
@@ -111,7 +112,6 @@
                 recipe.procedures.forEach(s => {
                     procContainer.innerHTML += `<h4 class="font-bold text-orange-950 mt-4">【${s.section}】</h4>`;
                     s.steps.forEach((step, i) => {
-                        // ここを修正！改行にも対応し、かつ「割」を無視する正規表現
                         const linkedStep = step.replace(/(\d+)[\s\u3000\n]*分(?![割])/g, (match, p1) => {
                             return `<button onclick="startTimer(${p1})" class="bg-orange-200 hover:bg-orange-300 text-orange-900 px-2 py-0.5 rounded-md font-bold transition underline decoration-orange-400">${p1}分</button>`;
                         });
