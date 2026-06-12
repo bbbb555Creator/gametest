@@ -143,14 +143,18 @@
                 display.innerText = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
                 
                 if (seconds <= 0) {
-                    stopTimer();
-                    // 完了時の通知
-                    alarmAudio.play();
+                    // 先に音とバイブを実行
+                    alarmAudio.play().catch(e => console.log("再生失敗:", e));
                     if ("vibrate" in navigator) navigator.vibrate([500, 200, 500]);
-                    alert("パンのタイマーが終了したよ！");
+                    
+                    // 停止処理
+                    stopTimer();
+                    
+                    // 少し遅らせてからアラートを出す（これなら音が鳴るはず！）
+                    setTimeout(() => {
+                        alert("パンのタイマーが終了したよ！");
+                    }, 100);
                 }
-            }, 1000);
-        }
 
         function stopTimer() {
             clearInterval(timerInterval);
