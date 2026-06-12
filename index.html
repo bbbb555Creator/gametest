@@ -55,9 +55,6 @@
         let allRecipes = {};
         let currentRecipeKey = ""; 
         let timerInterval;
-        // 音源の設定
-        const alarmAudio = new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg');
-        
         const GAS_URL = 'https://script.google.com/macros/s/AKfycbxPf6aGtE_j5qRRLuV6tjJ8aMOjaRQfBri3kOsDJ9dmteRgSuQ_7Kerizpi-X79eUaF/exec';
 
         async function fetchRecipes() {
@@ -152,24 +149,17 @@
                 
                 if (seconds <= 0) {
                     clearInterval(timerInterval);
-                    // 完了時の通知（オーバーレイ表示＋音＋振動）
                     document.getElementById('finishOverlay').classList.remove('hidden');
-                    alarmAudio.play().catch(e => console.log("再生エラー:", e));
-                    if ("vibrate" in navigator) navigator.vibrate([1000, 500, 1000]);
                 }
             }, 1000);
         }
 
         function stopTimer() {
             clearInterval(timerInterval);
-            alarmAudio.pause();
-            alarmAudio.currentTime = 0;
             document.getElementById('timerContainer').classList.add('hidden');
         }
 
         function dismissAlarm() {
-            alarmAudio.pause();
-            alarmAudio.currentTime = 0;
             document.getElementById('finishOverlay').classList.add('hidden');
             document.getElementById('timerContainer').classList.add('hidden');
         }
