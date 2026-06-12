@@ -48,6 +48,7 @@
         </div>
 
         <h3 id="procedureTitle" class="font-bold text-orange-900 mt-8 mb-2 hidden">作り方</h3>
+        <p id="timerHint" class="text-[10px] text-orange-400 mb-2 hidden">※色付きの分数はタップでタイマー開始</p>
         <div id="procedureList" class="text-sm text-orange-800 space-y-2"></div>
     </div>
 
@@ -113,21 +114,24 @@
 
             const procContainer = document.getElementById('procedureList');
             const procTitle = document.getElementById('procedureTitle');
+            const timerHint = document.getElementById('timerHint');
             procContainer.innerHTML = '';
             
             if (recipe.procedures && recipe.procedures.length > 0) {
                 procTitle.classList.remove('hidden');
+                timerHint.classList.remove('hidden');
                 recipe.procedures.forEach(s => {
                     procContainer.innerHTML += `<h4 class="font-bold text-orange-950 mt-4">【${s.section}】</h4>`;
                     s.steps.forEach((step, i) => {
                         const linkedStep = step.replace(/(\d+)[\s\u3000\n]*分(?![割の])/g, (match, p1) => {
-                            return `<button onclick="startTimer(${p1})" class="bg-orange-200 hover:bg-orange-300 text-orange-900 px-2 py-0.5 rounded-md font-bold transition underline decoration-orange-400">${p1}分</button>`;
+                            return `<button onclick="startTimer(${p1})" class="bg-orange-200 hover:bg-orange-300 text-orange-900 px-2 py-0.5 rounded-md font-bold transition underline decoration-orange-400">▶ ${p1}分</button>`;
                         });
                         procContainer.innerHTML += `<div class="text-sm py-1"><b>${i+1}.</b> ${linkedStep}</div>`;
                     });
                 });
             } else {
                 procTitle.classList.add('hidden');
+                timerHint.classList.add('hidden');
             }
             calculate();
         }
