@@ -10,6 +10,14 @@
     <div class="max-w-md mx-auto bg-white rounded-3xl shadow-lg p-6">
         <h1 class="text-2xl font-bold text-orange-800 mb-6 text-center">🍞 Bunのパン工房</h1>
 
+        <div id="finishOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div class="bg-white p-8 rounded-3xl text-center shadow-2xl max-w-xs w-full">
+                <div class="text-6xl mb-4">🔔</div>
+                <p class="text-xl font-bold text-orange-900 mb-6">時間だよ！</p>
+                <button onclick="dismissAlarm()" class="w-full bg-orange-600 text-white font-bold py-4 rounded-2xl text-lg hover:bg-orange-700 transition">OK</button>
+            </div>
+        </div>
+
         <div class="flex items-end gap-2 mb-3">
             <label class="block text-sm font-bold text-orange-900">レシピを選ぶ</label>
             <span class="text-[10px] text-orange-500 font-medium">← 横にスワイプ →</span>
@@ -47,7 +55,7 @@
         let allRecipes = {};
         let currentRecipeKey = ""; 
         let timerInterval;
-        // 通知音（短く済むものを設定）
+        // 音源の設定
         const alarmAudio = new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg');
         
         const GAS_URL = 'https://script.google.com/macros/s/AKfycbxPf6aGtE_j5qRRLuV6tjJ8aMOjaRQfBri3kOsDJ9dmteRgSuQ_7Kerizpi-X79eUaF/exec';
@@ -143,23 +151,26 @@
                 display.innerText = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
                 
                 if (seconds <= 0) {
-                    // 先に音とバイブを実行
-                    alarmAudio.play().catch(e => console.log("再生失敗:", e));
-                    if ("vibrate" in navigator) navigator.vibrate([500, 200, 500]);
-                    
-                    // 停止処理
-                    stopTimer();
-                    
-                    // 少し遅らせてからアラートを出す（これなら音が鳴るはず！）
-                    setTimeout(() => {
-                        alert("パンのタイマーが終了したよ！");
-                    }, 100);
+                    clearInterval(timerInterval);
+                    // 完了時の通知（オーバーレイ表示＋音＋振動）
+                    document.getElementById('finishOverlay').classList.remove('hidden');
+                    alarmAudio.play().catch(e => console.log("再生エラー:", e));
+                    if ("vibrate" in navigator) navigator.vibrate([1000, 500, 1000]);
                 }
+            }, 1000);
+        }
 
         function stopTimer() {
             clearInterval(timerInterval);
             alarmAudio.pause();
             alarmAudio.currentTime = 0;
+            document.getElementById('timerContainer').classList.add('hidden');
+        }
+
+        function dismissAlarm() {
+            alarmAudio.pause();
+            alarmAudio.currentTime = 0;
+            document.getElementById('finishOverlay').classList.add('hidden');
             document.getElementById('timerContainer').classList.add('hidden');
         }
 
