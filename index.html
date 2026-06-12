@@ -47,6 +47,9 @@
         let allRecipes = {};
         let currentRecipeKey = ""; 
         let timerInterval;
+        // 通知音（短く済むものを設定）
+        const alarmAudio = new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg');
+        
         const GAS_URL = 'https://script.google.com/macros/s/AKfycbxPf6aGtE_j5qRRLuV6tjJ8aMOjaRQfBri3kOsDJ9dmteRgSuQ_7Kerizpi-X79eUaF/exec';
 
         async function fetchRecipes() {
@@ -83,7 +86,7 @@
 
         function selectRecipe(key) {
             currentRecipeKey = key;
-            stopTimer(); // ここで切り替え時にタイマーを止める！
+            stopTimer();
             loadRecipe();
         }
 
@@ -112,10 +115,9 @@
                 recipe.procedures.forEach(s => {
                     procContainer.innerHTML += `<h4 class="font-bold text-orange-950 mt-4">【${s.section}】</h4>`;
                     s.steps.forEach((step, i) => {
-                        // 「分」の直後に「割」または「の」が来る場合は除外する
-const linkedStep = step.replace(/(\d+)[\s\u3000\n]*分(?![割の])/g, (match, p1) => {
-    return `<button onclick="startTimer(${p1})" class="bg-orange-200 hover:bg-orange-300 text-orange-900 px-2 py-0.5 rounded-md font-bold transition underline decoration-orange-400">${p1}分</button>`;
-});
+                        const linkedStep = step.replace(/(\d+)[\s\u3000\n]*分(?![割の])/g, (match, p1) => {
+                            return `<button onclick="startTimer(${p1})" class="bg-orange-200 hover:bg-orange-300 text-orange-900 px-2 py-0.5 rounded-md font-bold transition underline decoration-orange-400">${p1}分</button>`;
+                        });
                         procContainer.innerHTML += `<div class="text-sm py-1"><b>${i+1}.</b> ${linkedStep}</div>`;
                     });
                 });
@@ -142,13 +144,18 @@ const linkedStep = step.replace(/(\d+)[\s\u3000\n]*分(?![割の])/g, (match, p1
                 
                 if (seconds <= 0) {
                     stopTimer();
-                    alert("タイマー終了だよ！");
+                    // 完了時の通知
+                    alarmAudio.play();
+                    if ("vibrate" in navigator) navigator.vibrate([500, 200, 500]);
+                    alert("パンのタイマーが終了したよ！");
                 }
             }, 1000);
         }
 
         function stopTimer() {
             clearInterval(timerInterval);
+            alarmAudio.pause();
+            alarmAudio.currentTime = 0;
             document.getElementById('timerContainer').classList.add('hidden');
         }
 
